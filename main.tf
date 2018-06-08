@@ -1,0 +1,124 @@
+module "default_label" {
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.3.5"
+  attributes = "${var.attributes}"
+  delimiter  = "${var.delimiter}"
+  name       = "${var.name}"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  tags       = "${var.tags}"
+}
+
+resource "aws_security_group" "default" {
+  description = "Controls access to the ALB (HTTP/HTTPS)"
+
+  vpc_id = "${module.vpc.vpc_id}"
+  name   = "${module.default_label.id}"
+  tags   = "${module.default_label.tags}"
+}
+
+resource "aws_security_group_rule" "egress" {
+  type              = "egress"
+  from_port         = "0"
+  to_port           = "0"
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = "${aws_security_group.default.id}"
+}
+
+resource "aws_security_group_rule" "http_ingress" {
+  type              = "ingress"
+  from_port         = "${var.http_port}"
+  to_port           = "${var.http_port}"
+  protocol          = "tcp"
+  cidr_blocks       = ["${var.http_ingress_cidr_blocks}"]
+  prefix_list_ids   = ["${var.http_ingress_prefix_list_ids}"]
+  security_group_id = "${aws_security_group.default.id}"
+}
+
+resource "aws_security_group_rule" "https_ingress" {
+  type              = "ingress"
+  from_port         = "${var.https_port}"
+  to_port           = "${var.https_port}"
+  protocol          = "tcp"
+  cidr_blocks       = ["${var.https_ingress_cidr_blocks}"]
+  prefix_list_ids   = ["${var.https_ingress_prefix_list_ids}"]
+  security_group_id = "${aws_security_group.default.id}"
+}
+
+module "access_logs" {
+  source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=init"
+  attributes = "${var.attributes}"
+  delimiter  = "${var.delimiter}"
+  name       = "${var.name}"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  tags       = "${var.tags}"
+}
+
+resource "aws_lb" "default" {
+  name                             = "${module.default_label.id}"
+  tags                             = "${module.default_label.tags}"
+  internal                         = "${var.internal}"
+  load_balancer_type               = "application"
+  security_groups                  = ["${aws_security_group.default.id}"]
+  subnets                          = ["${var.subnet_ids}"]
+  enable_cross_zone_load_balancing = "${var.cross_zone_load_balancing_enabled}"
+  enable_http2                     = "${var.http2_enabled}"
+  idle_timeout                     = "${var.idle_timeout}"
+  ip_address_type                  = "${var.ip_address_type}"
+  enable_deletion_protection       = "${var.deletion_protection_enabled}"
+
+  access_logs {
+    bucket  = "${module.access_logs.bucket_id}"
+    prefix  = "${var.access_logs_prefix}"
+    enabled = "${var.access_logs_enabled}"
+  }
+}
+
+module "default_target_group_label" {
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.3.5"
+  attributes = "${concat(var.attributes, list("default"))}"
+  delimiter  = "${var.delimiter}"
+  name       = "${var.name}"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  tags       = "${var.tags}"
+}
+
+resource "aws_lb_target_group" "default" {
+  name        = "${module.default_target_group_label.id}"
+  port        = "80"
+  protocol    = "HTTP"
+  vpc_id      = "${var.vpc_id}"
+  target_type = "ip"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = "${aws_lb.default.arn}"
+  port              = "${var.http_port}"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.default.arn}"
+    type             = "forward"
+  }
+}
+
+resource "aws_alb_listener" "https" {
+  count             = "${var.certificate_arn == "" ? 0 : 1}"
+  load_balancer_arn = "${aws_alb.default.id}"
+
+  port            = "${var.https_port}"
+  protocol        = "HTTPS"
+  ssl_policy      = "ELBSecurityPolicy-2015-05"
+  certificate_arn = "${var.certificate_arn}"
+
+  default_action {
+    target_group_arn = "${aws_alb_target_group.default.arn}"
+    type             = "forward"
+  }
+}
