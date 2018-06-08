@@ -86,11 +86,21 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  name        = "${module.default_target_group_label.id}"
-  port        = "80"
-  protocol    = "HTTP"
-  vpc_id      = "${var.vpc_id}"
-  target_type = "ip"
+  name                 = "${module.default_target_group_label.id}"
+  port                 = "80"
+  protocol             = "HTTP"
+  vpc_id               = "${var.vpc_id}"
+  target_type          = "ip"
+  deregistration_delay = "${var.deregistration_delay}"
+
+  health_check {
+    path                = "${var.health_check_path}"
+    timeout             = "${var.health_check_timeout}"
+    healthy_threshold   = "${var.health_check_healthy_threshold}"
+    unhealthy_threshold = "${var.health_check_unhealthy_threshold}"
+    interval            = "${var.health_check_interval}"
+    matcher             = "${var.health_check_matcher}"
+  }
 
   lifecycle {
     create_before_destroy = true
