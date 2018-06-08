@@ -34,6 +34,10 @@ output "https_listener_arn" {
   value = "${aws_lb_listener.https.arn}"
 }
 
+output "listener_arns" {
+  value = "${aws_lb_listener.*.arn}"
+}
+
 output "access_logs_bucket" {
   value = "${module.access_logs.bucket_id}"
 }
