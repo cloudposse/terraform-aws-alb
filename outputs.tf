@@ -1,21 +1,21 @@
 output "alb_arn" {
-  value = "${aws_alb.default.arn}"
+  value = "${aws_lb.default.arn}"
 }
 
 output "alb_arn_suffix" {
-  value = "${aws_alb.default.arn_suffix}"
+  value = "${aws_lb.default.arn_suffix}"
 }
 
 output "alb_dns_name" {
-  value = "${aws_alb.default.dns_name}"
+  value = "${aws_lb.default.dns_name}"
 }
 
 output "alb_canonical_hosted_zone_id" {
-  value = "${aws_alb.default.canonical_hosted_zone_id}"
+  value = "${aws_lb.default.canonical_hosted_zone_id}"
 }
 
 output "alb_zone_id" {
-  value = "${aws_alb.default.zone_id}"
+  value = "${aws_lb.default.zone_id}"
 }
 
 output "security_group_id" {

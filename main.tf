@@ -11,7 +11,7 @@ module "default_label" {
 resource "aws_security_group" "default" {
   description = "Controls access to the ALB (HTTP/HTTPS)"
 
-  vpc_id = "${module.vpc.vpc_id}"
+  vpc_id = "${var.vpc_id}"
   name   = "${module.default_label.id}"
   tags   = "${module.default_label.tags}"
 }
@@ -36,6 +36,7 @@ resource "aws_security_group_rule" "http_ingress" {
 }
 
 resource "aws_security_group_rule" "https_ingress" {
+  count             = "${var.certificate_arn == "" ? 0 : 1}"
   type              = "ingress"
   from_port         = "${var.https_port}"
   to_port           = "${var.https_port}"
@@ -118,9 +119,9 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-resource "aws_alb_listener" "https" {
+resource "aws_lb_listener" "https" {
   count             = "${var.certificate_arn == "" ? 0 : 1}"
-  load_balancer_arn = "${aws_alb.default.id}"
+  load_balancer_arn = "${aws_lb.default.id}"
 
   port            = "${var.https_port}"
   protocol        = "HTTPS"
@@ -128,7 +129,7 @@ resource "aws_alb_listener" "https" {
   certificate_arn = "${var.certificate_arn}"
 
   default_action {
-    target_group_arn = "${aws_alb_target_group.default.arn}"
+    target_group_arn = "${aws_lb_target_group.default.arn}"
     type             = "forward"
   }
 }
