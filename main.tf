@@ -61,7 +61,7 @@ resource "aws_lb" "default" {
   tags                             = "${module.default_label.tags}"
   internal                         = "${var.internal}"
   load_balancer_type               = "application"
-  security_groups                  = ["${aws_security_group.default.id}"]
+  security_groups                  = ["${compact(concat(var.security_group_ids, list(aws_security_group.default.id)))}"]
   subnets                          = ["${var.subnet_ids}"]
   enable_cross_zone_load_balancing = "${var.cross_zone_load_balancing_enabled}"
   enable_http2                     = "${var.http2_enabled}"

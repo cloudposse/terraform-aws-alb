@@ -1,13 +1,13 @@
+variable "name" {
+  description = "Solution name, e.g. `app`"
+}
+
 variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. `cp` or `cloudposse`"
 }
 
 variable "stage" {
   description = "Stage, e.g. `prod`, `staging`, `dev`, or `test`"
-}
-
-variable "name" {
-  description = "Solution name, e.g. `app`"
 }
 
 variable "enabled" {
@@ -39,6 +39,11 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   type = "list"
+}
+
+variable "security_group_ids" {
+  type    = "list"
+  default = []
 }
 
 variable "internal" {
