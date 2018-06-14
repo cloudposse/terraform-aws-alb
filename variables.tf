@@ -98,6 +98,10 @@ variable "access_logs_enabled" {
   default = "true"
 }
 
+variable "access_logs_region" {
+  default = "us-east-1"
+}
+
 variable "cross_zone_load_balancing_enabled" {
   default = "true"
 }

@@ -54,6 +54,7 @@ module "access_logs" {
   namespace  = "${var.namespace}"
   stage      = "${var.stage}"
   tags       = "${var.tags}"
+  region     = "${var.access_logs_region}"
 }
 
 resource "aws_lb" "default" {
