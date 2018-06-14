@@ -10,9 +10,9 @@ output "alb_dns_name" {
   value = "${aws_lb.default.dns_name}"
 }
 
-output "alb_canonical_hosted_zone_id" {
-  value = "${aws_lb.default.canonical_hosted_zone_id}"
-}
+#output "alb_canonical_hosted_zone_id" {
+#  value = "${aws_lb.default.canonical_hosted_zone_id}"
+#}
 
 output "alb_zone_id" {
   value = "${aws_lb.default.zone_id}"
@@ -31,7 +31,7 @@ output "http_listener_arn" {
 }
 
 output "https_listener_arn" {
-  value = "${aws_lb_listener.https.arn}"
+  value = "${aws_lb_listener.https.*.arn}"
 }
 
 output "listener_arns" {
