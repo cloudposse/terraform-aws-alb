@@ -35,7 +35,7 @@ output "https_listener_arn" {
 }
 
 output "listener_arns" {
-  value = "${aws_lb_listener.*.arn}"
+  value = ["${aws_lb_listener.*.arn}"]
 }
 
 output "access_logs_bucket" {
