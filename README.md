@@ -65,7 +65,7 @@ A Terraform module to create an ALB, default ALB listener(s), and a default ALB 
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/cloudposse/default-backend/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Slack](https://slack.cloudposse.com).
+File a GitHub [issue](https://github.com/cloudposse/terraform-aws-alb/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Slack](https://slack.cloudposse.com).
 
 ## Contributing
 
