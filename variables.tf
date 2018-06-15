@@ -1,4 +1,4 @@
-variable "namespace" {
+ "namespace" {
   description = "Namespace, which could be your organization name, e.g. `cp` or `cloudposse`"
 }
 
@@ -35,7 +35,7 @@ variable "vpc_id" {
 
 variable "subnet_ids" {
   type       = "list"
-  desciption = "A list of subnet IDs to associate with ALB"
+  description = "A list of subnet IDs to associate with ALB"
 }
 
 variable "security_group_ids" {
