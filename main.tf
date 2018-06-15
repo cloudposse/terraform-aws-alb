@@ -124,7 +124,7 @@ resource "aws_lb_listener" "http" {
 
 resource "aws_lb_listener" "https" {
   count             = "${var.https_enabled}"
-  load_balancer_arn = "${aws_lb.default.id}"
+  load_balancer_arn = "${aws_lb.default.arn}"
 
   port            = "${var.https_port}"
   protocol        = "HTTPS"
