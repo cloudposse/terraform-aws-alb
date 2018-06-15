@@ -1,7 +1,3 @@
-variable "name" {
-  description = "Solution name, e.g. `app`"
-}
-
 variable "namespace" {
   description = "Namespace, which could be your organization name, e.g. `cp` or `cloudposse`"
 }
@@ -10,9 +6,13 @@ variable "stage" {
   description = "Stage, e.g. `prod`, `staging`, `dev`, or `test`"
 }
 
+variable "name" {
+  description = "Solution name, e.g. `app`"
+}
+
 variable "enabled" {
-  description = "Set to false to prevent the module from creating any resources"
   default     = "true"
+  description = "Set to false to prevent the module from creating any resources"
 }
 
 variable "delimiter" {
@@ -35,118 +35,145 @@ variable "tags" {
 
 variable "vpc_id" {
   type = "string"
+  description = "VPC ID to associate with ALB"
 }
 
 variable "subnet_ids" {
   type = "list"
+  desciption = "A list of subnet IDs to associate with ALB"
 }
 
 variable "security_group_ids" {
   type    = "list"
   default = []
+  description = "A list of additional security group IDs to allow access to ALB"
 }
 
 variable "internal" {
   default = "false"
+  description = "A boolean flag to determine whether the ALB should be internal"
 }
 
 variable "http_port" {
   default = "80"
+  description = "The port for the HTTP listener"
 }
 
 variable "http_enabled" {
   default = "true"
+  description = "A boolean flag to enable/disable HTTP listener"
 }
 
 variable "http_ingress_cidr_blocks" {
   type    = "list"
   default = ["0.0.0.0/0"]
+  description = "List of CIDR blocks to allow in HTTP security group"
 }
 
 variable "http_ingress_prefix_list_ids" {
   type    = "list"
   default = []
+  description = "List of prefix list IDs for allowing access to HTTP ingress security group"
 }
 
 variable "certificate_arn" {
   default = ""
+  description = "The ARN of the default SSL certificate for HTTPS listener"
 }
 
 variable "https_port" {
-  default = "80"
+  default = "443"
+  description = "The port for the HTTPS listener"
 }
 
 variable "https_enabled" {
-  default = "true"
+  default = "false"
+  description = "A boolean flag to enable/disable HTTPS listener"
 }
 
 variable "https_ingress_cidr_blocks" {
   type    = "list"
   default = ["0.0.0.0/0"]
+  description = "List of CIDR blocks to allow in HTTPS security group"
 }
 
 variable "https_ingress_prefix_list_ids" {
   type    = "list"
   default = []
+  description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
 }
 
 variable "access_logs_prefix" {
   default = ""
+  description = "The S3 bucket prefix"
 }
 
 variable "access_logs_enabled" {
   default = "true"
+  description = "A boolean flag to enable/disable access_logs"
 }
 
 variable "access_logs_region" {
   default = "us-east-1"
+  description = "The region for the access_logs S3 bucket"
 }
 
 variable "cross_zone_load_balancing_enabled" {
   default = "true"
+  description = "A boolean flag to enable/disable cross zone load balancing"
 }
 
 variable "http2_enabled" {
   default = "true"
+  description = "A boolean flag to enable/disable HTTP/2"
 }
 
 variable "idle_timeout" {
   default = "60"
+  description = "The time in seconds that the connection is allowed to be idle"
 }
 
 variable "ip_address_type" {
+  default     = "ipv4"
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`."
-  default     = "dualstack"
 }
 
 variable "deletion_protection_enabled" {
   default = "false"
+  description = "A boolean flag to enable/disable deletion protection for ALB"
 }
 
 variable "deregistration_delay" {
   default = "15"
+  description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused"
 }
 
 variable "health_check_path" {
   default = "/"
+  description = "The destination for the health check request"
 }
 
 variable "health_check_timeout" {
   default = "10"
+  description = "The amount of time to wait in seconds before failing a health check request"
 }
 
 variable "health_check_healthy_threshold" {
   default = "2"
+  description = "The number of consecutive health checks successes required before considering an unhealthy target healthy"
 }
 
 variable "health_check_unhealthy_threshold" {
   default = "2"
+  description = "The number of consecutive health check failures required before considering the target unhealthy"
 }
 
 variable "health_check_interval" {
   default = "15"
+  description = "The duration in seconds in between health checks"
 }
 
 variable "health_check_matcher" {
   default = "200-399"
+  description = "The HTTP response codes to indicate a healthy check"
 }
