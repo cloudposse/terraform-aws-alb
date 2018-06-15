@@ -10,11 +10,6 @@ variable "name" {
   description = "Solution name, e.g. `app`"
 }
 
-variable "enabled" {
-  default     = "true"
-  description = "Set to false to prevent the module from creating any resources"
-}
-
 variable "delimiter" {
   type        = "string"
   default     = "-"
