@@ -1,6 +1,6 @@
 ![Cloud Posse](https://cloudposse.com/logo-300x69.png)
 
-# terraform-aws-alb [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-alb)
+# terraform-aws-alb [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-alb) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 A Terraform module to create an ALB, default ALB listener(s), and a default ALB target and related security groups.
 
