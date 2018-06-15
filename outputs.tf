@@ -40,7 +40,7 @@ output "https_listener_arn" {
 
 output "listener_arns" {
   description = "A list of all the listener ARNs"
-  value       = ["${aws_lb_listener.http.arn}"]
+  value       = ["${compact(concat(aws_lb_listener.http.*.arn, aws_lb_listener.https.*.arn))}"]
 }
 
 output "access_logs_bucket_id" {
