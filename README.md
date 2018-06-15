@@ -15,7 +15,6 @@ A Terraform module to create an ALB, default ALB listener(s), and a default ALB 
 | `name`                             |      ``         | Name  (e.g. `app` or `cluster`)                                                  |   Yes    |
 | `vpc_id`                           |      ``         | The VPC ID where ALB will be provisioned                                         |   Yes    |
 | `subnet_ids`                       |      ``         | A list of subnet IDs to associate with ALB                                       |   Yes    |
-| `enabled`                          |    `true`       | A boolean flag to enable/disable resource creation.                              |    No    |
 | `security_group_ids`               |     `[]`        | A list of additional security group IDs to allow access to ALB                   |    No    |
 | `internal`                         |    `false`      | A boolean flag to determine whether the ALB should be internal                   |    No    |
 | `http_port`                        |     `80`        | The port for the HTTP listener                                                   |    No    |
@@ -60,7 +59,7 @@ A Terraform module to create an ALB, default ALB listener(s), and a default ALB 
 | `http_listener_arn`             | The ARN of the HTTP listener                                    |
 | `https_listener_arn`            | The ARN of the HTTPS listener                                   |
 | `listener_arns`                 | A list of all the listener ARNs                                 |
-| `access_logs_bucket`            | The S3 bucket ID for access logs                                |
+| `access_logs_bucket_id`         | The S3 bucket ID for access logs                                |
 
 ## Help
 
