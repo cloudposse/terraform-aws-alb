@@ -10,10 +10,9 @@ module "default_label" {
 
 resource "aws_security_group" "default" {
   description = "Controls access to the ALB (HTTP/HTTPS)"
-
-  vpc_id = "${var.vpc_id}"
-  name   = "${module.default_label.id}"
-  tags   = "${module.default_label.tags}"
+  vpc_id      = "${var.vpc_id}"
+  name        = "${module.default_label.id}"
+  tags        = "${module.default_label.tags}"
 }
 
 resource "aws_security_group_rule" "egress" {
@@ -26,7 +25,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "http_ingress" {
-  count             = "${var.http_enabled}"
+  count             = "${var.http_enabled == "true" ? 1 : 0}"
   type              = "ingress"
   from_port         = "${var.http_port}"
   to_port           = "${var.http_port}"
@@ -37,7 +36,7 @@ resource "aws_security_group_rule" "http_ingress" {
 }
 
 resource "aws_security_group_rule" "https_ingress" {
-  count             = "${var.https_enabled}"
+  count             = "${var.https_enabled == "true" ? 1 : 0}"
   type              = "ingress"
   from_port         = "${var.https_port}"
   to_port           = "${var.https_port}"
@@ -48,7 +47,7 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=init"
+  source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.0"
   attributes = "${var.attributes}"
   delimiter  = "${var.delimiter}"
   name       = "${var.name}"
@@ -111,7 +110,7 @@ resource "aws_lb_target_group" "default" {
 }
 
 resource "aws_lb_listener" "http" {
-  count             = "${var.http_enabled}"
+  count             = "${var.http_enabled == "true" ? 1 : 0}"
   load_balancer_arn = "${aws_lb.default.arn}"
   port              = "${var.http_port}"
   protocol          = "HTTP"
@@ -123,7 +122,7 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener" "https" {
-  count             = "${var.https_enabled}"
+  count             = "${var.https_enabled == "true" ? 1 : 0}"
   load_balancer_arn = "${aws_lb.default.arn}"
 
   port            = "${var.https_port}"
