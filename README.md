@@ -48,24 +48,24 @@ A Terraform module to create an ALB, default ALB listener(s), and a default ALB 
 
 ## Outputs
 
-| Name                            | Description                                                     |
-|:--------------------------------|:----------------------------------------------------------------|
-| `alb_arn`                       | The ARN of the ALB                                              |
-| `alb_arn_suffix`                | The ARN suffix of the ALB                                       |
-| `alb_dns_name`                  | DNS name of ALB                                                 |
-| `alb_zone_id`                   | The ID of the zone which ALB is provisioned                     |
-| `security_group_id`             | The security group ID of the ALB                                |
-| `default_target_group_arn`      | The default target group ARN                                    |
-| `http_listener_arn`             | The ARN of the HTTP listener                                    |
-| `https_listener_arn`            | The ARN of the HTTPS listener                                   |
-| `listener_arns`                 | A list of all the listener ARNs                                 |
-| `access_logs_bucket_id`         | The S3 bucket ID for access logs                                |
+| Name                            | Description                                                       |
+|:--------------------------------|:------------------------------------------------------------------|
+| `alb_arn`                       | The ARN of the ALB                                                |
+| `alb_arn_suffix`                | The ARN suffix of the ALB                                         |
+| `alb_dns_name`                  | DNS name of ALB                                                   |
+| `alb_zone_id`                   | The canonical hosted zone ID of ALB (to be used in Route53 Alias) |
+| `security_group_id`             | The security group ID of the ALB                                  |
+| `default_target_group_arn`      | The default target group ARN                                      |
+| `http_listener_arn`             | The ARN of the HTTP listener                                      |
+| `https_listener_arn`            | The ARN of the HTTPS listener                                     |
+| `listener_arns`                 | A list of all the listener ARNs                                   |
+| `access_logs_bucket_id`         | The S3 bucket ID for access logs                                  |
 
 ## Help
 
 **Got a question?**
 
-File a GitHub [issue](https://github.com/cloudposse/terraform-aws-alb/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
+File a GitHub [issue](https://github.com/cloudposse/terraform-aws-alb/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Slack](https://slack.cloudposse.com).
 
 ## Contributing
 
