@@ -22,7 +22,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 Include this module in your existing terraform code:
 
-```
+```hcl
 module "alb" {
   source             = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=tags/0.2.0"
   namespace          = "eg"
