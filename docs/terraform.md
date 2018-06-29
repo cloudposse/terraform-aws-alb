@@ -46,6 +46,7 @@
 | alb_arn | The ARN of the ALB |
 | alb_arn_suffix | The ARN suffix of the ALB |
 | alb_dns_name | DNS name of ALB |
+| alb_name | The ARN suffix of the ALB |
 | alb_zone_id | The ID of the zone which ALB is provisioned |
 | default_target_group_arn | The default target group ARN |
 | http_listener_arn | The ARN of the HTTP listener |
