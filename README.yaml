@@ -7,6 +7,10 @@
 # Name of this project
 name: terraform-aws-alb
 
+# Category of this project
+categories:
+  - aws
+
 # Logo for this project
 #logo: docs/logo.png
 
