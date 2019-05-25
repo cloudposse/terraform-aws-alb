@@ -196,3 +196,8 @@ variable "health_check_matcher" {
   default     = "200-399"
   description = "The HTTP response codes to indicate a healthy check"
 }
+
+variable "alb_access_logs_s3_bucket_force_destroy" {
+  description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
+  default     = false
+}

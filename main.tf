@@ -1,5 +1,5 @@
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.3"
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.2.1"
   attributes = "${var.attributes}"
   delimiter  = "${var.delimiter}"
   name       = "${var.name}"
@@ -47,14 +47,15 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.0"
-  attributes = "${var.attributes}"
-  delimiter  = "${var.delimiter}"
-  name       = "${var.name}"
-  namespace  = "${var.namespace}"
-  stage      = "${var.stage}"
-  tags       = "${var.tags}"
-  region     = "${var.access_logs_region}"
+  source        = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.4"
+  attributes    = "${compact(concat(var.attributes, list("access", "logs")))}"
+  delimiter     = "${var.delimiter}"
+  name          = "${var.name}"
+  namespace     = "${var.namespace}"
+  stage         = "${var.stage}"
+  tags          = "${var.tags}"
+  region        = "${var.access_logs_region}"
+  force_destroy = "${var.alb_access_logs_s3_bucket_force_destroy}"
 }
 
 resource "aws_lb" "default" {
@@ -78,7 +79,7 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.6"
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.2.1"
   attributes = "${concat(var.attributes, list("default"))}"
   delimiter  = "${var.delimiter}"
   name       = "${var.name}"
