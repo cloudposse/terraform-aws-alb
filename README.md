@@ -117,6 +117,7 @@ Available targets:
 | stage | Stage, e.g. `prod`, `staging`, `dev`, or `test` | string | - | yes |
 | subnet_ids | A list of subnet IDs to associate with ALB | list | - | yes |
 | tags | Additional tags (e.g. `map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
+| target_group_port | The port for the default target group | string | `80` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
 
 ## Outputs
