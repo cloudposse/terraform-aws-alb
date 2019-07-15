@@ -107,6 +107,11 @@ variable "https_ingress_prefix_list_ids" {
   description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
 }
 
+variable "https_ssl_policy" {
+  description = "The name of the SSL Policy for the listener."
+  default     = "ELBSecurityPolicy-2015-05"
+}
+
 variable "access_logs_prefix" {
   type        = "string"
   default     = ""

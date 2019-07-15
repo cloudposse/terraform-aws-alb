@@ -108,6 +108,7 @@ Available targets:
 | https_ingress_cidr_blocks | List of CIDR blocks to allow in HTTPS security group | list | `<list>` | no |
 | https_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | list | `<list>` | no |
 | https_port | The port for the HTTPS listener | string | `443` | no |
+| https_ssl_policy | The name of the SSL Policy for the listener. | string | `ELBSecurityPolicy-2015-05` | no |
 | idle_timeout | The time in seconds that the connection is allowed to be idle | string | `60` | no |
 | internal | A boolean flag to determine whether the ALB should be internal | string | `false` | no |
 | ip_address_type | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`. | string | `ipv4` | no |
