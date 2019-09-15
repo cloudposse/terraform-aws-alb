@@ -14,3 +14,6 @@ script:
   - make terraform/get-modules
   - make terraform/lint
   - make terraform/validate
+
+env:
+  - TERRAFORM_VERSION=0.12.7
