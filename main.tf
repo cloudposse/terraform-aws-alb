@@ -89,11 +89,11 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  name                 = "${module.default_target_group_label.id}"
+  name                 = "${var.target_group_name == "" ? module.default_target_group_label.id : var.target_group_name}"
   port                 = "${var.target_group_port}"
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
-  target_type          = "ip"
+  target_type          = "${var.target_group_target_type}"
   deregistration_delay = "${var.deregistration_delay}"
 
   health_check {
@@ -108,6 +108,8 @@ resource "aws_lb_target_group" "default" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = "${length(var.target_group_tags) == 0 ? module.default_target_group_label.tags : var.target_group_tags}"
 }
 
 resource "aws_lb_listener" "http" {
