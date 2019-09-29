@@ -88,7 +88,9 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  name                 = "${module.default_target_group_label.id}"
+
+  name_prefix = format("%s%s", module.defaul_label.id, var.delimiter)
+  #name                 = "${module.default_target_group_label.id}"
   port                 = "80"
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
