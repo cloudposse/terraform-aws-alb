@@ -211,3 +211,7 @@ variable "target_group_port" {
   description = "The port for the default target group"
   default     = "80"
 }
+
+variable "target_type" {
+  default = "instance"
+}

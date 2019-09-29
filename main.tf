@@ -1,5 +1,5 @@
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.2.1"
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.3"
   attributes = "${var.attributes}"
   delimiter  = "${var.delimiter}"
   name       = "${var.name}"
@@ -30,8 +30,8 @@ resource "aws_security_group_rule" "http_ingress" {
   from_port         = "${var.http_port}"
   to_port           = "${var.http_port}"
   protocol          = "tcp"
-  cidr_blocks       = ["${var.http_ingress_cidr_blocks}"]
-  prefix_list_ids   = ["${var.http_ingress_prefix_list_ids}"]
+  cidr_blocks       = "${var.http_ingress_cidr_blocks}"
+  prefix_list_ids   = "${var.http_ingress_prefix_list_ids}"
   security_group_id = "${aws_security_group.default.id}"
 }
 
@@ -41,21 +41,20 @@ resource "aws_security_group_rule" "https_ingress" {
   from_port         = "${var.https_port}"
   to_port           = "${var.https_port}"
   protocol          = "tcp"
-  cidr_blocks       = ["${var.https_ingress_cidr_blocks}"]
-  prefix_list_ids   = ["${var.https_ingress_prefix_list_ids}"]
+  cidr_blocks       = "${var.https_ingress_cidr_blocks}"
+  prefix_list_ids   = "${var.https_ingress_prefix_list_ids}"
   security_group_id = "${aws_security_group.default.id}"
 }
 
 module "access_logs" {
-  source        = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.4"
-  attributes    = "${compact(concat(var.attributes, list("alb", "access", "logs")))}"
-  delimiter     = "${var.delimiter}"
-  name          = "${var.name}"
-  namespace     = "${var.namespace}"
-  stage         = "${var.stage}"
-  tags          = "${var.tags}"
-  region        = "${var.access_logs_region}"
-  force_destroy = "${var.alb_access_logs_s3_bucket_force_destroy}"
+  source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.0"
+  attributes = "${var.attributes}"
+  delimiter  = "${var.delimiter}"
+  name       = "${var.name}"
+  namespace  = "${var.namespace}"
+  stage      = "${var.stage}"
+  tags       = "${var.tags}"
+  region     = "${var.access_logs_region}"
 }
 
 resource "aws_lb" "default" {
@@ -63,8 +62,8 @@ resource "aws_lb" "default" {
   tags                             = "${module.default_label.tags}"
   internal                         = "${var.internal}"
   load_balancer_type               = "application"
-  security_groups                  = ["${compact(concat(var.security_group_ids, list(aws_security_group.default.id)))}"]
-  subnets                          = ["${var.subnet_ids}"]
+  security_groups                  = "${compact(concat(var.security_group_ids, list(aws_security_group.default.id)))}"
+  subnets                          = "${var.subnet_ids}"
   enable_cross_zone_load_balancing = "${var.cross_zone_load_balancing_enabled}"
   enable_http2                     = "${var.http2_enabled}"
   idle_timeout                     = "${var.idle_timeout}"
@@ -79,7 +78,7 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.2.1"
+  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.3"
   attributes = "${concat(var.attributes, list("default"))}"
   delimiter  = "${var.delimiter}"
   name       = "${var.name}"
@@ -90,10 +89,10 @@ module "default_target_group_label" {
 
 resource "aws_lb_target_group" "default" {
   name                 = "${module.default_target_group_label.id}"
-  port                 = "${var.target_group_port}"
+  port                 = "80"
   protocol             = "HTTP"
   vpc_id               = "${var.vpc_id}"
-  target_type          = "ip"
+  target_type          = "${var.target_type}"
   deregistration_delay = "${var.deregistration_delay}"
 
   health_check {
@@ -128,7 +127,7 @@ resource "aws_lb_listener" "https" {
 
   port            = "${var.https_port}"
   protocol        = "HTTPS"
-  ssl_policy      = "${var.https_ssl_policy}"
+  ssl_policy      = "ELBSecurityPolicy-2015-05"
   certificate_arn = "${var.certificate_arn}"
 
   default_action {
