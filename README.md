@@ -120,6 +120,7 @@ Available targets:
 | tags | Additional tags (e.g. `map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
 | target_group_port | The port for the default target group | string | `80` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
+| target_type | Define if target group use instance or ip to agroup  | string | - | no |
 
 ## Outputs
 
