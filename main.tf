@@ -89,7 +89,7 @@ module "default_target_group_label" {
 
 resource "aws_lb_target_group" "default" {
 
-  name_prefix = "albtg"
+  name_prefix          = "albtg"
   #name                 = "${module.default_target_group_label.id}"
   port                 = "80"
   protocol             = "HTTP"
