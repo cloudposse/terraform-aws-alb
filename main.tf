@@ -109,7 +109,7 @@ resource "aws_lb_target_group" "default" {
     create_before_destroy = true
   }
 
-  tags = "${length(var.target_group_tags) == 0 ? module.default_target_group_label.tags : var.target_group_tags}"
+  tags = "${merge(module.default_target_group_label.tags, var.target_group_additional_tags)}"
 }
 
 resource "aws_lb_listener" "http" {

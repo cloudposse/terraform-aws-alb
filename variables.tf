@@ -224,8 +224,8 @@ variable "target_group_target_type" {
   description = "The type (instance, ip or lambda) of targets that can be registered with the target group"
 }
 
-variable "target_group_tags" {
+variable "target_group_additional_tags" {
   type        = "map"
   default     = {}
-  description = "The tags to apply to the target group, uses module tags if left empty"
+  description = "The additional tags to apply to the target group"
 }

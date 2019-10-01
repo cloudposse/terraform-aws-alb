@@ -37,9 +37,9 @@
 | stage | Stage, e.g. `prod`, `staging`, `dev`, or `test` | string | - | yes |
 | subnet_ids | A list of subnet IDs to associate with ALB | list | - | yes |
 | tags | Additional tags (e.g. `map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
+| target_group_additional_tags | The additional tags to apply to the target group | map | `<map>` | no |
 | target_group_name | The name for the default target group, uses a module label name if left empty | string | `` | no |
 | target_group_port | The port for the default target group | string | `80` | no |
-| target_group_tags | The tags to apply to the target group, uses module tags if left empty | map | `<map>` | no |
 | target_group_target_type | The type (instance, ip or lambda) of targets that can be registered with the target group | string | `ip` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
 
