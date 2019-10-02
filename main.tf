@@ -11,7 +11,7 @@ module "default_label" {
 resource "aws_security_group" "default" {
   description = "Controls access to the ALB (HTTP/HTTPS)"
   vpc_id      = "${var.vpc_id}"
-  name        = "elb-${module.default_label.id}"
+  name        = "${module.default_label.id}"
   tags        = "${module.default_label.tags}"
 }
 
