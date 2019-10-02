@@ -46,6 +46,7 @@ resource "aws_security_group_rule" "https_ingress" {
   security_group_id = "${aws_security_group.default.id}"
 }
 
+/*
 module "access_logs" {
   source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.0"
   attributes = "${var.attributes}"
@@ -56,7 +57,7 @@ module "access_logs" {
   tags       = "${var.tags}"
   region     = "${var.access_logs_region}"
 }
-
+*/
 resource "aws_lb" "default" {
   name                             = "${module.default_label.id}"
   tags                             = "${module.default_label.tags}"
@@ -71,7 +72,7 @@ resource "aws_lb" "default" {
   enable_deletion_protection       = "${var.deletion_protection_enabled}"
 
   access_logs {
-    bucket  = "${module.access_logs.bucket_id}"
+    bucket  = "${var.access_logs_bucket}"
     prefix  = "${var.access_logs_prefix}"
     enabled = "${var.access_logs_enabled}"
   }
