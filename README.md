@@ -118,7 +118,10 @@ Available targets:
 | stage | Stage, e.g. `prod`, `staging`, `dev`, or `test` | string | - | yes |
 | subnet_ids | A list of subnet IDs to associate with ALB | list | - | yes |
 | tags | Additional tags (e.g. `map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
+| target_group_additional_tags | The additional tags to apply to the target group | map | `<map>` | no |
+| target_group_name | The name for the default target group, uses a module label name if left empty | string | `` | no |
 | target_group_port | The port for the default target group | string | `80` | no |
+| target_group_target_type | The type (instance, ip or lambda) of targets that can be registered with the target group | string | `ip` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
 
 ## Outputs
@@ -276,13 +279,13 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 |---|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: https://github.com/osterman.png?size=150
+  [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: https://github.com/goruha.png?size=150
+  [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
   [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://github.com/aknysh.png?size=150
+  [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
   [sarkis_homepage]: https://github.com/sarkis
-  [sarkis_avatar]: https://github.com/sarkis.png?size=150
+  [sarkis_avatar]: https://img.cloudposse.com/150x150/https://github.com/sarkis.png
 
 
 

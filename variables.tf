@@ -211,3 +211,21 @@ variable "target_group_port" {
   description = "The port for the default target group"
   default     = "80"
 }
+
+variable "target_group_name" {
+  type        = "string"
+  default     = ""
+  description = "The name for the default target group, uses a module label name if left empty"
+}
+
+variable "target_group_target_type" {
+  type        = "string"
+  default     = "ip"
+  description = "The type (instance, ip or lambda) of targets that can be registered with the target group"
+}
+
+variable "target_group_additional_tags" {
+  type        = "map"
+  default     = {}
+  description = "The additional tags to apply to the target group"
+}
