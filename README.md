@@ -3,7 +3,7 @@
 
 [![Cloud Posse][logo]](https://cpco.io/homepage)
 
-# terraform-aws-alb [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-alb.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-alb) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg)](https://github.com/cloudposse/terraform-aws-alb/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# terraform-aws-alb [![Codefresh Build Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-alb?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5db7391dfe309d4a2ed304fa) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg)](https://github.com/cloudposse/terraform-aws-alb/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to create an ALB, default ALB listener(s), and a default ALB target and related security groups.
@@ -47,21 +47,73 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-aws-alb/releases).
 
 
-Include this module in your existing terraform code:
+For a complete example, see [examples/complete](examples/complete).
+
+For automated test of the complete example using `bats` and `Terratest`, see [test](test).
 
 ```hcl
-module "alb" {
-  source             = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=tags/0.2.0"
-  namespace          = "eg"
-  name               = "app"
-  stage              = "dev"
+  provider "aws" {
+    region = var.region
+  }
 
-  vpc_id             = "xxxxxxxxx"
-  ip_address_type    = "ipv4"
+  module "vpc" {
+    source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
+    namespace  = var.namespace
+    stage      = var.stage
+    name       = var.name
+    delimiter  = var.delimiter
+    attributes = var.attributes
+    cidr_block = var.vpc_cidr_block
+    tags       = var.tags
+  }
 
-  subnet_ids         = ["xxxxxxxx", "xxxxxxxx"]
-  access_logs_region = "us-west-2"
-}
+  module "subnets" {
+    source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.1"
+    availability_zones   = var.availability_zones
+    namespace            = var.namespace
+    stage                = var.stage
+    name                 = var.name
+    attributes           = var.attributes
+    delimiter            = var.delimiter
+    vpc_id               = module.vpc.vpc_id
+    igw_id               = module.vpc.igw_id
+    cidr_block           = module.vpc.vpc_cidr_block
+    nat_gateway_enabled  = false
+    nat_instance_enabled = false
+    tags                 = var.tags
+  }
+
+  module "alb" {
+    source                                  = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=master"
+    namespace                               = var.namespace
+    stage                                   = var.stage
+    name                                    = var.name
+    attributes                              = var.attributes
+    delimiter                               = var.delimiter
+    vpc_id                                  = module.vpc.vpc_id
+    security_group_ids                      = [module.vpc.vpc_default_security_group_id]
+    subnet_ids                              = module.subnets.public_subnet_ids
+    internal                                = var.internal
+    http_enabled                            = var.http_enabled
+    access_logs_enabled                     = var.access_logs_enabled
+    alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
+    access_logs_region                      = var.access_logs_region
+    cross_zone_load_balancing_enabled       = var.cross_zone_load_balancing_enabled
+    http2_enabled                           = var.http2_enabled
+    idle_timeout                            = var.idle_timeout
+    ip_address_type                         = var.ip_address_type
+    deletion_protection_enabled             = var.deletion_protection_enabled
+    deregistration_delay                    = var.deregistration_delay
+    health_check_path                       = var.health_check_path
+    health_check_timeout                    = var.health_check_timeout
+    health_check_healthy_threshold          = var.health_check_healthy_threshold
+    health_check_unhealthy_threshold        = var.health_check_unhealthy_threshold
+    health_check_interval                   = var.health_check_interval
+    health_check_matcher                    = var.health_check_matcher
+    target_group_port                       = var.target_group_port
+    target_group_target_type                = var.target_group_target_type
+    tags                                    = var.tags
+  }
 ```
 
 
@@ -83,45 +135,45 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| access_logs_enabled | A boolean flag to enable/disable access_logs | string | `true` | no |
-| access_logs_prefix | The S3 bucket prefix | string | `` | no |
+| access_logs_enabled | A boolean flag to enable/disable access_logs | bool | `true` | no |
+| access_logs_prefix | The S3 log bucket prefix | string | `` | no |
 | access_logs_region | The region for the access_logs S3 bucket | string | `us-east-1` | no |
-| alb_access_logs_s3_bucket_force_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | string | `false` | no |
-| attributes | Additional attributes, e.g. `1` | list | `<list>` | no |
+| alb_access_logs_s3_bucket_force_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | bool | `false` | no |
+| attributes | Additional attributes (_e.g._ "1") | list(string) | `<list>` | no |
 | certificate_arn | The ARN of the default SSL certificate for HTTPS listener | string | `` | no |
-| cross_zone_load_balancing_enabled | A boolean flag to enable/disable cross zone load balancing | string | `true` | no |
-| deletion_protection_enabled | A boolean flag to enable/disable deletion protection for ALB | string | `false` | no |
-| delimiter | Delimiter to be used between `namespace`, `name`, `stage` and `attributes` | string | `-` | no |
-| deregistration_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | string | `15` | no |
-| health_check_healthy_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | string | `2` | no |
-| health_check_interval | The duration in seconds in between health checks | string | `15` | no |
+| cross_zone_load_balancing_enabled | A boolean flag to enable/disable cross zone load balancing | bool | `true` | no |
+| deletion_protection_enabled | A boolean flag to enable/disable deletion protection for ALB | bool | `false` | no |
+| delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |
+| deregistration_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | number | `15` | no |
+| health_check_healthy_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | number | `2` | no |
+| health_check_interval | The duration in seconds in between health checks | number | `15` | no |
 | health_check_matcher | The HTTP response codes to indicate a healthy check | string | `200-399` | no |
 | health_check_path | The destination for the health check request | string | `/` | no |
-| health_check_timeout | The amount of time to wait in seconds before failing a health check request | string | `10` | no |
-| health_check_unhealthy_threshold | The number of consecutive health check failures required before considering the target unhealthy | string | `2` | no |
-| http2_enabled | A boolean flag to enable/disable HTTP/2 | string | `true` | no |
-| http_enabled | A boolean flag to enable/disable HTTP listener | string | `true` | no |
-| http_ingress_cidr_blocks | List of CIDR blocks to allow in HTTP security group | list | `<list>` | no |
-| http_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTP ingress security group | list | `<list>` | no |
-| http_port | The port for the HTTP listener | string | `80` | no |
-| https_enabled | A boolean flag to enable/disable HTTPS listener | string | `false` | no |
-| https_ingress_cidr_blocks | List of CIDR blocks to allow in HTTPS security group | list | `<list>` | no |
-| https_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | list | `<list>` | no |
-| https_port | The port for the HTTPS listener | string | `443` | no |
-| https_ssl_policy | The name of the SSL Policy for the listener. | string | `ELBSecurityPolicy-2015-05` | no |
-| idle_timeout | The time in seconds that the connection is allowed to be idle | string | `60` | no |
-| internal | A boolean flag to determine whether the ALB should be internal | string | `false` | no |
+| health_check_timeout | The amount of time to wait in seconds before failing a health check request | number | `10` | no |
+| health_check_unhealthy_threshold | The number of consecutive health check failures required before considering the target unhealthy | number | `2` | no |
+| http2_enabled | A boolean flag to enable/disable HTTP/2 | bool | `true` | no |
+| http_enabled | A boolean flag to enable/disable HTTP listener | bool | `true` | no |
+| http_ingress_cidr_blocks | List of CIDR blocks to allow in HTTP security group | list(string) | `<list>` | no |
+| http_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTP ingress security group | list(string) | `<list>` | no |
+| http_port | The port for the HTTP listener | number | `80` | no |
+| https_enabled | A boolean flag to enable/disable HTTPS listener | bool | `false` | no |
+| https_ingress_cidr_blocks | List of CIDR blocks to allow in HTTPS security group | list(string) | `<list>` | no |
+| https_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | list(string) | `<list>` | no |
+| https_port | The port for the HTTPS listener | number | `443` | no |
+| https_ssl_policy | The name of the SSL Policy for the listener | string | `ELBSecurityPolicy-2015-05` | no |
+| idle_timeout | The time in seconds that the connection is allowed to be idle | number | `60` | no |
+| internal | A boolean flag to determine whether the ALB should be internal | bool | `false` | no |
 | ip_address_type | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`. | string | `ipv4` | no |
-| name | Solution name, e.g. `app` | string | - | yes |
-| namespace | Namespace, which could be your organization name, e.g. `cp` or `cloudposse` | string | - | yes |
-| security_group_ids | A list of additional security group IDs to allow access to ALB | list | `<list>` | no |
-| stage | Stage, e.g. `prod`, `staging`, `dev`, or `test` | string | - | yes |
-| subnet_ids | A list of subnet IDs to associate with ALB | list | - | yes |
-| tags | Additional tags (e.g. `map(`BusinessUnit`,`XYZ`) | map | `<map>` | no |
-| target_group_additional_tags | The additional tags to apply to the target group | map | `<map>` | no |
+| name | Name of the application | string | - | yes |
+| namespace | Namespace (e.g. `eg` or `cp`) | string | `` | no |
+| security_group_ids | A list of additional security group IDs to allow access to ALB | list(string) | `<list>` | no |
+| stage | Stage (e.g. `prod`, `dev`, `staging`) | string | `` | no |
+| subnet_ids | A list of subnet IDs to associate with ALB | list(string) | - | yes |
+| tags | Additional tags (_e.g._ { BusinessUnit : ABC }) | map(string) | `<map>` | no |
+| target_group_additional_tags | The additional tags to apply to the target group | map(string) | `<map>` | no |
 | target_group_name | The name for the default target group, uses a module label name if left empty | string | `` | no |
-| target_group_port | The port for the default target group | string | `80` | no |
-| target_group_target_type | The type (instance, ip or lambda) of targets that can be registered with the target group | string | `ip` | no |
+| target_group_port | The port for the default target group | number | `80` | no |
+| target_group_target_type | The type (`instance`, `ip` or `lambda`) of targets that can be registered with the target group | string | `ip` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
 
 ## Outputs
