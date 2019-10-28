@@ -44,4 +44,19 @@ func TestExamplesComplete(t *testing.T) {
 	accessLogsBucketId := terraform.Output(t, terraformOptions, "access_logs_bucket_id")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "eg-test-alb-alb-access-logs", accessLogsBucketId)
+
+	// Run `terraform output` to get the value of an output variable
+	albName := terraform.Output(t, terraformOptions, "alb_name")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "eg-test-alb", albName)
+
+	// Run `terraform output` to get the value of an output variable
+	defaultTargetGroupArn := terraform.Output(t, terraformOptions, "default_target_group_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, defaultTargetGroupArn, "arn:aws:elasticloadbalancing:us-east-2:126450723953:targetgroup/eg-test-alb-default")
+
+	// Run `terraform output` to get the value of an output variable
+	httpListenerArn := terraform.Output(t, terraformOptions, "http_listener_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, httpListenerArn, "arn:aws:elasticloadbalancing:us-east-2:126450723953:listener/app/eg-test-alb")
 }
