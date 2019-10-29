@@ -18,9 +18,9 @@ github_repo: cloudposse/terraform-aws-alb
 
 # Badges to display
 badges:
-  - name: "Build Status"
-    image: "https://travis-ci.org/cloudposse/terraform-aws-alb.svg?branch=master"
-    url: "https://travis-ci.org/cloudposse/terraform-aws-alb"
+  - name: "Codefresh Build Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-alb?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5db7391dfe309d4a2ed304fa"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg"
     url: "https://github.com/cloudposse/terraform-aws-alb/releases/latest"
@@ -39,21 +39,73 @@ description: |-
 
 # How to use this project
 usage: |-
-  Include this module in your existing terraform code:
+  For a complete example, see [examples/complete](examples/complete).
+
+  For automated test of the complete example using `bats` and `Terratest`, see [test](test).
 
   ```hcl
-  module "alb" {
-    source             = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=tags/0.2.0"
-    namespace          = "eg"
-    name               = "app"
-    stage              = "dev"
+    provider "aws" {
+      region = var.region
+    }
 
-    vpc_id             = "xxxxxxxxx"
-    ip_address_type    = "ipv4"
+    module "vpc" {
+      source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
+      namespace  = var.namespace
+      stage      = var.stage
+      name       = var.name
+      delimiter  = var.delimiter
+      attributes = var.attributes
+      cidr_block = var.vpc_cidr_block
+      tags       = var.tags
+    }
 
-    subnet_ids         = ["xxxxxxxx", "xxxxxxxx"]
-    access_logs_region = "us-west-2"
-  }
+    module "subnets" {
+      source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.1"
+      availability_zones   = var.availability_zones
+      namespace            = var.namespace
+      stage                = var.stage
+      name                 = var.name
+      attributes           = var.attributes
+      delimiter            = var.delimiter
+      vpc_id               = module.vpc.vpc_id
+      igw_id               = module.vpc.igw_id
+      cidr_block           = module.vpc.vpc_cidr_block
+      nat_gateway_enabled  = false
+      nat_instance_enabled = false
+      tags                 = var.tags
+    }
+
+    module "alb" {
+      source                                  = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=master"
+      namespace                               = var.namespace
+      stage                                   = var.stage
+      name                                    = var.name
+      attributes                              = var.attributes
+      delimiter                               = var.delimiter
+      vpc_id                                  = module.vpc.vpc_id
+      security_group_ids                      = [module.vpc.vpc_default_security_group_id]
+      subnet_ids                              = module.subnets.public_subnet_ids
+      internal                                = var.internal
+      http_enabled                            = var.http_enabled
+      access_logs_enabled                     = var.access_logs_enabled
+      alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
+      access_logs_region                      = var.access_logs_region
+      cross_zone_load_balancing_enabled       = var.cross_zone_load_balancing_enabled
+      http2_enabled                           = var.http2_enabled
+      idle_timeout                            = var.idle_timeout
+      ip_address_type                         = var.ip_address_type
+      deletion_protection_enabled             = var.deletion_protection_enabled
+      deregistration_delay                    = var.deregistration_delay
+      health_check_path                       = var.health_check_path
+      health_check_timeout                    = var.health_check_timeout
+      health_check_healthy_threshold          = var.health_check_healthy_threshold
+      health_check_unhealthy_threshold        = var.health_check_unhealthy_threshold
+      health_check_interval                   = var.health_check_interval
+      health_check_matcher                    = var.health_check_matcher
+      target_group_port                       = var.target_group_port
+      target_group_target_type                = var.target_group_target_type
+      tags                                    = var.tags
+    }
   ```
 
 # Other files to include in this README from the project folder
