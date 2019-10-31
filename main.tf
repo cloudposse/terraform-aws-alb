@@ -118,7 +118,8 @@ resource "aws_lb_listener" "http" {
   port              = "${var.http_port}"
   protocol          = "HTTP"
 
-  default_action {
+  
+  /*default_action {
     type = "redirect"
 
     redirect {
@@ -126,6 +127,12 @@ resource "aws_lb_listener" "http" {
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
+  }*/
+
+
+  default_action {
+    target_group_arn = "${aws_lb_target_group.default.arn}"
+    type             = "forward"
   }
 
   
