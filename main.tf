@@ -119,7 +119,7 @@ resource "aws_lb_listener" "http" {
   protocol          = "HTTP"
 
   
-  /*default_action {
+  default_action {
     type = "redirect"
 
     redirect {
@@ -127,7 +127,7 @@ resource "aws_lb_listener" "http" {
       protocol    = "HTTPS"
       status_code = "HTTP_301"
     }
-  }*/
+  }
 
 
   default_action {
