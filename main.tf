@@ -143,7 +143,7 @@ resource "aws_lb_listener" "http" {
 resource "aws_lb_listener_rule" "healthcheck" {
   count        = "${var.http_enabled == "true" ? 1 : 0}" 
   listener_arn = "${aws_lb_listener.http[count.index].arn}"
-  priority     = 0
+  priority     = 1
 
   action {
     type             = "forward"
