@@ -141,7 +141,8 @@ resource "aws_lb_listener" "http" {
 }
 
 resource "aws_lb_listener_rule" "healthcheck" {
-  listener_arn = "${aws_lb_listener.http.arn[0]}"
+  #count        = "${var.http_enabled == "true" ? 1 : 0}" 
+  listener_arn = "${aws_lb_listener.http.arn[1]}"
   priority     = 0
 
   action {
