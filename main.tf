@@ -152,7 +152,7 @@ resource "aws_lb_listener_rule" "healthcheck" {
 
   condition {
     field  = "path-pattern"
-    values = ["/healthcheck","/healthcheck/"]
+    values = ["/healthcheck*"]
   }
 }
 
