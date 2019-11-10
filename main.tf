@@ -140,6 +140,21 @@ resource "aws_lb_listener" "http" {
   
 }
 
+resource "aws_lb_listener_rule" "healthcheck" {
+  listener_arn = "${aws_lb_listener.http.arn}"
+  priority     = 0
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_lb_target_group.default.arn}"
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/healthcheck"]
+  }
+}
+
 resource "aws_lb_listener" "https" {
   count             = "${var.https_enabled == "true" ? 1 : 0}"
   load_balancer_arn = "${aws_lb.default.arn}"
