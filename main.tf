@@ -170,3 +170,10 @@ resource "aws_lb_listener" "https" {
     type             = "forward"
   }
 }
+
+resource "aws_lb_cookie_stickiness_policy" "sticky" {
+  name                     = "sticky-policy"
+  load_balancer            = "${aws_lb.default.id}"
+  lb_port                  = 443
+  cookie_expiration_period = 172800
+}
