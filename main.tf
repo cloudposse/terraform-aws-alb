@@ -59,7 +59,7 @@ module "access_logs" {
 }
 */
 resource "aws_lb" "default" {
-  name_prefix                      = "alb-${var.namespace}-${var.name}"//"${module.default_label.id}"
+  name                             = "alb-${var.namespace}-${var.name}"//"${module.default_label.id}"
   tags                             = "${module.default_label.tags}"
   internal                         = "${var.internal}"
   load_balancer_type               = "application"
