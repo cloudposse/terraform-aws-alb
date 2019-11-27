@@ -59,7 +59,7 @@ module "access_logs" {
 }
 */
 resource "aws_lb" "default" {
-  name                             = "alb-${var.namespace}-${var.name}"//"${module.default_label.id}"
+  name                             = "${module.default_label.id}"
   tags                             = "${module.default_label.tags}"
   internal                         = "${var.internal}"
   load_balancer_type               = "application"
@@ -75,10 +75,6 @@ resource "aws_lb" "default" {
     bucket  = "${var.access_logs_bucket}"
     prefix  = "${var.access_logs_prefix}"
     enabled = "${var.access_logs_enabled}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
   }
 }
 
@@ -175,9 +171,9 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-resource "aws_lb_cookie_stickiness_policy" "sticky" {
+resource "aws_lb_cookie_stickiness_policy" "stickyness" {
   name                     = "sticky-policy"
-  load_balancer            = "${aws_lb.default.id}"
+  load_balancer            = "${aws_elb.default.id}"
   lb_port                  = 443
-  cookie_expiration_period = 172800
+  cookie_expiration_period = 600
 }
