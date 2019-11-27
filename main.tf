@@ -107,6 +107,12 @@ resource "aws_lb_target_group" "default" {
     matcher             = "${var.health_check_matcher}"
   }
 
+  stickiness {
+    type = "lb_cookie"
+    cookie_duration = 604800
+    enabled = true
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -171,9 +177,3 @@ resource "aws_lb_listener" "https" {
   }
 }
 
-resource "aws_lb_cookie_stickiness_policy" "stickyness" {
-  name                     = "sticky-policy"
-  load_balancer            = "${aws_lb.default.arn}"
-  lb_port                  = 443
-  cookie_expiration_period = 600
-}
