@@ -173,7 +173,7 @@ resource "aws_lb_listener" "https" {
 
 resource "aws_lb_cookie_stickiness_policy" "stickyness" {
   name                     = "sticky-policy"
-  load_balancer            = "${aws_lb.default.name}"
+  load_balancer            = "${aws_lb.default.arn}"
   lb_port                  = 443
   cookie_expiration_period = 600
 }
