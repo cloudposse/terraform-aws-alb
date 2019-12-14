@@ -1,11 +1,12 @@
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
-  attributes = var.attributes
-  delimiter  = var.delimiter
-  name       = var.name
-  namespace  = var.namespace
-  stage      = var.stage
-  tags       = var.tags
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  attributes  = var.attributes
+  delimiter   = var.delimiter
+  name        = var.name
+  namespace   = var.namespace
+  stage       = var.stage
+  environment = var.environment
+  tags        = var.tags
 }
 
 resource "aws_security_group" "default" {
@@ -47,10 +48,11 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source        = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.2.0"
+  source        = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.3.0"
   name          = var.name
   namespace     = var.namespace
   stage         = var.stage
+  environment   = var.environment
   attributes    = compact(concat(var.attributes, ["alb", "access", "logs"]))
   delimiter     = var.delimiter
   tags          = var.tags
@@ -83,13 +85,14 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
-  attributes = concat(var.attributes, ["default"])
-  delimiter  = var.delimiter
-  name       = var.name
-  namespace  = var.namespace
-  stage      = var.stage
-  tags       = var.tags
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  attributes  = concat(var.attributes, ["default"])
+  delimiter   = var.delimiter
+  name        = var.name
+  namespace   = var.namespace
+  stage       = var.stage
+  environment = var.environment
+  tags        = var.tags
 }
 
 resource "aws_lb_target_group" "default" {
@@ -119,8 +122,8 @@ resource "aws_lb_target_group" "default" {
   )
 }
 
-resource "aws_lb_listener" "http" {
-  count             = var.http_enabled ? 1 : 0
+resource "aws_lb_listener" "http_forward" {
+  count             = var.http_enabled && var.http_redirect != true ? 1 : 0
   load_balancer_arn = aws_lb.default.arn
   port              = var.http_port
   protocol          = "HTTP"
@@ -128,6 +131,24 @@ resource "aws_lb_listener" "http" {
   default_action {
     target_group_arn = aws_lb_target_group.default.arn
     type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "http_redirect" {
+  count             = var.http_enabled && var.http_redirect == true ? 1 : 0
+  load_balancer_arn = aws_lb.default.arn
+  port              = var.http_port
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.default.arn
+    type             = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 

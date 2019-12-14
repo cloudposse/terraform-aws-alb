@@ -34,8 +34,13 @@ output "default_target_group_arn" {
 }
 
 output "http_listener_arn" {
-  description = "The ARN of the HTTP listener"
-  value       = join("", aws_lb_listener.http.*.arn)
+  description = "The ARN of the HTTP forwarding listener"
+  value       = join("", aws_lb_listener.http_forward.*.arn)
+}
+
+output "http_redirect_listener_arn" {
+  description = "The ARN of the HTTP to HTTPS redirect listener"
+  value       = join("", aws_lb_listener.http_redirect.*.arn)
 }
 
 output "https_listener_arn" {
@@ -46,7 +51,7 @@ output "https_listener_arn" {
 output "listener_arns" {
   description = "A list of all the listener ARNs"
   value = compact(
-    concat(aws_lb_listener.http.*.arn, aws_lb_listener.https.*.arn)
+    concat(aws_lb_listener.http_forward.*.arn, aws_lb_listener.http_redirect.*.arn, aws_lb_listener.https.*.arn)
   )
 }
 

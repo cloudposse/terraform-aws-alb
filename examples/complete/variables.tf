@@ -56,6 +56,11 @@ variable "http_enabled" {
   description = "A boolean flag to enable/disable HTTP listener"
 }
 
+variable "http_redirect" {
+  type        = bool
+  description = "A boolean flag to enable/disable HTTP redirect to HTTPS"
+}
+
 variable "access_logs_enabled" {
   type        = bool
   description = "A boolean flag to enable/disable access_logs"

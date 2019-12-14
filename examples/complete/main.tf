@@ -41,6 +41,7 @@ module "alb" {
   subnet_ids                              = module.subnets.public_subnet_ids
   internal                                = var.internal
   http_enabled                            = var.http_enabled
+  http_redirect                           = var.http_redirect
   access_logs_enabled                     = var.access_logs_enabled
   alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
   access_logs_region                      = var.access_logs_region
