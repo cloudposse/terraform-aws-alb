@@ -10,6 +10,12 @@ variable "stage" {
   default     = ""
 }
 
+variable "environment" {
+  type        = string
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+  default     = ""
+}
+
 variable "name" {
   type        = string
   description = "Name of the application"
@@ -65,6 +71,12 @@ variable "http_enabled" {
   type        = bool
   default     = true
   description = "A boolean flag to enable/disable HTTP listener"
+}
+
+variable "http_redirect" {
+  type        = bool
+  default     = false
+  description = "A boolean flag to enable/disable HTTP redirect to HTTPS"
 }
 
 variable "http_ingress_cidr_blocks" {

@@ -12,6 +12,7 @@
 | deletion_protection_enabled | A boolean flag to enable/disable deletion protection for ALB | bool | `false` | no |
 | delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |
 | deregistration_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | number | `15` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | health_check_healthy_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | number | `2` | no |
 | health_check_interval | The duration in seconds in between health checks | number | `15` | no |
 | health_check_matcher | The HTTP response codes to indicate a healthy check | string | `200-399` | no |
@@ -23,6 +24,7 @@
 | http_ingress_cidr_blocks | List of CIDR blocks to allow in HTTP security group | list(string) | `<list>` | no |
 | http_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTP ingress security group | list(string) | `<list>` | no |
 | http_port | The port for the HTTP listener | number | `80` | no |
+| http_redirect | A boolean flag to enable/disable HTTP redirect to HTTPS | bool | `false` | no |
 | https_enabled | A boolean flag to enable/disable HTTPS listener | bool | `false` | no |
 | https_ingress_cidr_blocks | List of CIDR blocks to allow in HTTPS security group | list(string) | `<list>` | no |
 | https_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | list(string) | `<list>` | no |
@@ -54,7 +56,8 @@
 | alb_name | The ARN suffix of the ALB |
 | alb_zone_id | The ID of the zone which ALB is provisioned |
 | default_target_group_arn | The default target group ARN |
-| http_listener_arn | The ARN of the HTTP listener |
+| http_listener_arn | The ARN of the HTTP forwarding listener |
+| http_redirect_listener_arn | The ARN of the HTTP to HTTPS redirect listener |
 | https_listener_arn | The ARN of the HTTPS listener |
 | listener_arns | A list of all the listener ARNs |
 | security_group_id | The security group ID of the ALB |
