@@ -227,3 +227,5 @@ variable "http_redirect" {
   type = bool
   default = true
 
+}
+
