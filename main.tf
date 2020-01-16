@@ -157,9 +157,11 @@ resource "aws_lb_listener_rule" "healthcheck" {
     target_group_arn = aws_lb_target_group.default.arn
   }
 
+
   condition {
-    field  = "path-pattern"
-    values = ["/healthcheck/"]
+    path_pattern {
+      values = ["/healthcheck/"]
+    }
   }
 }
 
