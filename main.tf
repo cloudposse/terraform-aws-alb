@@ -47,7 +47,6 @@ resource "aws_security_group_rule" "https_ingress" {
   prefix_list_ids   = var.https_ingress_prefix_list_ids
   security_group_id = aws_security_group.default.id
 }
-
 /*
 module "access_logs" {
   source     = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.1.0"
