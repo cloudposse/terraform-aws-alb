@@ -20,13 +20,13 @@ variable "delimiter" {
 }
 
 variable "attributes" {
-  type        = "list"
+  
   default     = []
   description = "Additional attributes, e.g. `1`"
 }
 
 variable "tags" {
-  type        = "map"
+  
   default     = {}
   description = "Additional tags (e.g. `map(`BusinessUnit`,`XYZ`)"
 }
@@ -37,12 +37,12 @@ variable "vpc_id" {
 }
 
 variable "subnet_ids" {
-  type        = "list"
+  
   description = "A list of subnet IDs to associate with ALB"
 }
 
 variable "security_group_ids" {
-  type        = "list"
+  
   default     = []
   description = "A list of additional security group IDs to allow access to ALB"
 }
@@ -66,13 +66,13 @@ variable "http_enabled" {
 }
 
 variable "http_ingress_cidr_blocks" {
-  type        = "list"
+  
   default     = ["0.0.0.0/0"]
   description = "List of CIDR blocks to allow in HTTP security group"
 }
 
 variable "http_ingress_prefix_list_ids" {
-  type        = "list"
+  
   default     = []
   description = "List of prefix list IDs for allowing access to HTTP ingress security group"
 }
@@ -96,13 +96,13 @@ variable "https_enabled" {
 }
 
 variable "https_ingress_cidr_blocks" {
-  type        = "list"
+  
   default     = ["0.0.0.0/0"]
   description = "List of CIDR blocks to allow in HTTPS security group"
 }
 
 variable "https_ingress_prefix_list_ids" {
-  type        = "list"
+  
   default     = []
   description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
 }
