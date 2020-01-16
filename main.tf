@@ -80,13 +80,14 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "git::https://github.com/cloudposse/terraform-terraform-label.git?ref=tags/0.1.3"
-  attributes = concat(var.attributes, list("default"))
-  delimiter  = var.delimiter
-  name       = var.name
-  namespace  = var.namespace
-  stage      = var.stage
-  tags       = var.tags
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  attributes  = concat(var.attributes, ["default"])
+  delimiter   = var.delimiter
+  name        = var.name
+  namespace   = var.namespace
+  stage       = var.stage
+  environment = var.environment
+  tags        = var.tags
 }
 
 
