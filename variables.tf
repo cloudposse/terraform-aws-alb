@@ -223,6 +223,3 @@ variable "access_logs_bucket" {
   
 }
 
-variable "environment" {
-  
-}

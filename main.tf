@@ -5,7 +5,7 @@ module "default_label" {
   name        = var.name
   namespace   = var.namespace
   stage       = var.stage
-  environment = var.environment
+ 
   tags        = var.tags
 }
 
@@ -86,7 +86,6 @@ module "default_target_group_label" {
   name        = var.name
   namespace   = var.namespace
   stage       = var.stage
-  environment = var.environment
   tags        = var.tags
 }
 
