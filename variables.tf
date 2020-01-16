@@ -214,7 +214,7 @@ variable "target_group_port" {
 }
 
 variable "target_type" {
-  default = "ip"
+  default = "instance"
 }
 
 variable "access_logs_bucket" {
