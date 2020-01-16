@@ -49,19 +49,19 @@ variable "security_group_ids" {
 
 variable "internal" {
   
-  default     = "false"
+  default     = false
   description = "A boolean flag to determine whether the ALB should be internal"
 }
 
 variable "http_port" {
   
-  default     = "80"
+  default     = 80
   description = "The port for the HTTP listener"
 }
 
 variable "http_enabled" {
   
-  default     = "true"
+  default     = true
   description = "A boolean flag to enable/disable HTTP listener"
 }
 
@@ -85,13 +85,13 @@ variable "certificate_arn" {
 
 variable "https_port" {
   
-  default     = "443"
+  default     = 443
   description = "The port for the HTTPS listener"
 }
 
 variable "https_enabled" {
   
-  default     = "false"
+  default     = false
   description = "A boolean flag to enable/disable HTTPS listener"
 }
 
@@ -120,7 +120,7 @@ variable "access_logs_prefix" {
 
 variable "access_logs_enabled" {
   
-  default     = "true"
+  default     = true
   description = "A boolean flag to enable/disable access_logs"
 }
 
@@ -132,19 +132,19 @@ variable "access_logs_region" {
 
 variable "cross_zone_load_balancing_enabled" {
   
-  default     = "true"
+  default     = true
   description = "A boolean flag to enable/disable cross zone load balancing"
 }
 
 variable "http2_enabled" {
   
-  default     = "true"
+  default     = true
   description = "A boolean flag to enable/disable HTTP/2"
 }
 
 variable "idle_timeout" {
   
-  default     = "60"
+  default     = 60
   description = "The time in seconds that the connection is allowed to be idle"
 }
 
@@ -156,13 +156,13 @@ variable "ip_address_type" {
 
 variable "deletion_protection_enabled" {
   
-  default     = "false"
+  default     = false
   description = "A boolean flag to enable/disable deletion protection for ALB"
 }
 
 variable "deregistration_delay" {
   
-  default     = "15"
+  default     = 15
   description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused"
 }
 
@@ -174,25 +174,25 @@ variable "health_check_path" {
 
 variable "health_check_timeout" {
   
-  default     = "10"
+  default     = 10
   description = "The amount of time to wait in seconds before failing a health check request"
 }
 
 variable "health_check_healthy_threshold" {
   
-  default     = "2"
+  default     = 2
   description = "The number of consecutive health checks successes required before considering an unhealthy target healthy"
 }
 
 variable "health_check_unhealthy_threshold" {
   
-  default     = "2"
+  default     = 2
   description = "The number of consecutive health check failures required before considering the target unhealthy"
 }
 
 variable "health_check_interval" {
   
-  default     = "15"
+  default     = 15
   description = "The duration in seconds in between health checks"
 }
 
@@ -209,7 +209,7 @@ variable "alb_access_logs_s3_bucket_force_destroy" {
 
 variable "target_group_port" {
   description = "The port for the default target group"
-  default     = "80"
+  default     = 80
 }
 
 variable "target_type" {
