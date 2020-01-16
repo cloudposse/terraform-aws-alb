@@ -137,24 +137,25 @@ variable "cross_zone_load_balancing_enabled" {
 }
 
 variable "http2_enabled" {
-
+  
   default     = "true"
   description = "A boolean flag to enable/disable HTTP/2"
 }
 
-
+variable "idle_timeout" {
+  
   default     = "60"
   description = "The time in seconds that the connection is allowed to be idle"
 }
 
 variable "ip_address_type" {
-
+  
   default     = "ipv4"
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`."
 }
 
 variable "deletion_protection_enabled" {
-
+  
   default     = "false"
   description = "A boolean flag to enable/disable deletion protection for ALB"
 }
