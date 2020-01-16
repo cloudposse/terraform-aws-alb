@@ -223,3 +223,7 @@ variable "access_logs_bucket" {
   
 }
 
+variable "http_redirect" {
+  type = bool
+  default = true
+

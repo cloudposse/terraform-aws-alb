@@ -36,8 +36,9 @@ resource "aws_security_group_rule" "http_ingress" {
   security_group_id = aws_security_group.default.id
 }
 
+
 resource "aws_security_group_rule" "https_ingress" {
-  count             = var.https_enabled == true ? 1 : 0
+  count             = var.https_enabled ? 1 : 0
   type              = "ingress"
   from_port         = var.https_port
   to_port           = var.https_port
@@ -120,14 +121,14 @@ resource "aws_lb_target_group" "default" {
 }
 
 resource "aws_lb_listener" "http" {
-  count             = var.http_enabled == true ? 1 : 0
+  count             = var.http_enabled && var.http_redirect == true ? 1 : 0
   load_balancer_arn = aws_lb.default.arn
   port              = var.http_port
   protocol          = "HTTP"
 
-  
   default_action {
-    type = "redirect"
+    target_group_arn = aws_lb_target_group.default.arn
+    type             = "redirect"
 
     redirect {
       port        = "443"
@@ -135,13 +136,6 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
-
-/*
-  default_action {
-    target_group_arn = aws_lb_target_group.default.arn
-    type             = "forward"
-  }
-*/
   
 
   
