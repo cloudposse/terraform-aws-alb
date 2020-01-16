@@ -222,3 +222,7 @@ variable "access_logs_bucket" {
   default = "logs"
   
 }
+
+variable "environment" {
+  
+}
