@@ -229,6 +229,12 @@ variable "target_group_port" {
   description = "The port for the default target group"
 }
 
+variable "target_group_protocol" {
+  type        = string
+  default     = "HTTP"
+  description = "The protocol to use to connect with the target"
+}
+
 variable "target_group_name" {
   type        = string
   default     = ""
