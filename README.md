@@ -215,6 +215,7 @@ Available targets:
 | target_group_additional_tags | The additional tags to apply to the target group | map(string) | `<map>` | no |
 | target_group_name | The name for the default target group, uses a module label name if left empty | string | `` | no |
 | target_group_port | The port for the default target group | number | `80` | no |
+| target_group_protocol | The protocol for the default target group HTTP or HTTPS | string | `HTTP` | no |
 | target_group_target_type | The type (`instance`, `ip` or `lambda`) of targets that can be registered with the target group | string | `ip` | no |
 | vpc_id | VPC ID to associate with ALB | string | - | yes |
 

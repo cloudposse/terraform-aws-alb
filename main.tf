@@ -99,12 +99,13 @@ module "default_target_group_label" {
 resource "aws_lb_target_group" "default" {
   name                 = var.target_group_name == "" ? module.default_target_group_label.id : var.target_group_name
   port                 = var.target_group_port
-  protocol             = "HTTP"
+  protocol             = var.target_group_protocol
   vpc_id               = var.vpc_id
   target_type          = var.target_group_target_type
   deregistration_delay = var.deregistration_delay
 
   health_check {
+    protocol            = var.target_group_protocol
     path                = var.health_check_path
     timeout             = var.health_check_timeout
     healthy_threshold   = var.health_check_healthy_threshold
