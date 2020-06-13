@@ -24,7 +24,7 @@ func TestExamplesComplete(t *testing.T) {
 		// Variables to pass to our Terraform code using -var-file options
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
 		Vars: map[string]interface{}{
-			"attributes": myList,
+			"attributes": attributes,
 		},
 	}
 
@@ -51,8 +51,8 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Run `terraform output` to get the value of an output variable
 	accessLogsBucketId := terraform.Output(t, terraformOptions, "access_logs_bucket_id")
-	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-alb-alb-access-logs-"+attributes[0], accessLogsBucketId)
+	// Verify we're getting back the outputs we expect eg-test-alb-25346-alb-access-logs
+	assert.Equal(t, "eg-test-alb-"+attributes[0]+"-alb-access-logs", accessLogsBucketId)
 
 	// Run `terraform output` to get the value of an output variable
 	albName := terraform.Output(t, terraformOptions, "alb_name")
@@ -61,8 +61,8 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Run `terraform output` to get the value of an output variable
 	defaultTargetGroupArn := terraform.Output(t, terraformOptions, "default_target_group_arn")
-	// Verify we're getting back the outputs we expect
-	assert.Contains(t, defaultTargetGroupArn, "arn:aws:elasticloadbalancing:us-east-2:126450723953:targetgroup/eg-test-alb-default-"+attributes[0])
+	// Verify we're getting back the outputs we expect something like "arn:aws:elasticloadbalancing:us-east-2:126450723953:targetgroup/eg-test-alb-11514-default/89e9fe401fc63cf7
+	assert.Contains(t, defaultTargetGroupArn, "arn:aws:elasticloadbalancing:us-east-2:126450723953:targetgroup/eg-test-alb-"+attributes[0]+"-default")
 
 	// Run `terraform output` to get the value of an output variable
 	httpListenerArn := terraform.Output(t, terraformOptions, "http_listener_arn")
