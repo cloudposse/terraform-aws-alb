@@ -1,65 +1,81 @@
+## Requirements
+
+| Name | Version |
+|------|---------|
+| terraform | ~> 0.12.0 |
+| aws | ~> 2.0 |
+| local | ~> 1.3 |
+| null | ~> 2.0 |
+| template | ~> 2.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | ~> 2.0 |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| access_logs_enabled | A boolean flag to enable/disable access_logs | bool | `true` | no |
-| access_logs_prefix | The S3 log bucket prefix | string | `` | no |
-| access_logs_region | The region for the access_logs S3 bucket | string | `us-east-1` | no |
-| alb_access_logs_s3_bucket_force_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | bool | `false` | no |
-| attributes | Additional attributes (_e.g._ "1") | list(string) | `<list>` | no |
-| certificate_arn | The ARN of the default SSL certificate for HTTPS listener | string | `` | no |
-| cross_zone_load_balancing_enabled | A boolean flag to enable/disable cross zone load balancing | bool | `true` | no |
-| deletion_protection_enabled | A boolean flag to enable/disable deletion protection for ALB | bool | `false` | no |
-| delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | string | `-` | no |
-| deregistration_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | number | `15` | no |
-| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
-| health_check_healthy_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | number | `2` | no |
-| health_check_interval | The duration in seconds in between health checks | number | `15` | no |
-| health_check_matcher | The HTTP response codes to indicate a healthy check | string | `200-399` | no |
-| health_check_path | The destination for the health check request | string | `/` | no |
-| health_check_timeout | The amount of time to wait in seconds before failing a health check request | number | `10` | no |
-| health_check_unhealthy_threshold | The number of consecutive health check failures required before considering the target unhealthy | number | `2` | no |
-| http2_enabled | A boolean flag to enable/disable HTTP/2 | bool | `true` | no |
-| http_enabled | A boolean flag to enable/disable HTTP listener | bool | `true` | no |
-| http_ingress_cidr_blocks | List of CIDR blocks to allow in HTTP security group | list(string) | `<list>` | no |
-| http_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTP ingress security group | list(string) | `<list>` | no |
-| http_port | The port for the HTTP listener | number | `80` | no |
-| http_redirect | A boolean flag to enable/disable HTTP redirect to HTTPS | bool | `false` | no |
-| https_enabled | A boolean flag to enable/disable HTTPS listener | bool | `false` | no |
-| https_ingress_cidr_blocks | List of CIDR blocks to allow in HTTPS security group | list(string) | `<list>` | no |
-| https_ingress_prefix_list_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | list(string) | `<list>` | no |
-| https_port | The port for the HTTPS listener | number | `443` | no |
-| https_ssl_policy | The name of the SSL Policy for the listener | string | `ELBSecurityPolicy-2015-05` | no |
-| idle_timeout | The time in seconds that the connection is allowed to be idle | number | `60` | no |
-| internal | A boolean flag to determine whether the ALB should be internal | bool | `false` | no |
-| ip_address_type | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`. | string | `ipv4` | no |
-| name | Name of the application | string | - | yes |
-| namespace | Namespace (e.g. `eg` or `cp`) | string | `` | no |
-| security_group_ids | A list of additional security group IDs to allow access to ALB | list(string) | `<list>` | no |
-| stage | Stage (e.g. `prod`, `dev`, `staging`) | string | `` | no |
-| subnet_ids | A list of subnet IDs to associate with ALB | list(string) | - | yes |
-| tags | Additional tags (_e.g._ { BusinessUnit : ABC }) | map(string) | `<map>` | no |
-| target_group_additional_tags | The additional tags to apply to the target group | map(string) | `<map>` | no |
-| target_group_name | The name for the default target group, uses a module label name if left empty | string | `` | no |
-| target_group_port | The port for the default target group | number | `80` | no |
-| target_group_protocol | The protocol for the default target group HTTP or HTTPS | string | `HTTP` | no |
-| target_group_target_type | The type (`instance`, `ip` or `lambda`) of targets that can be registered with the target group | string | `ip` | no |
-| vpc_id | VPC ID to associate with ALB | string | - | yes |
+|------|-------------|------|---------|:--------:|
+| access\_logs\_enabled | A boolean flag to enable/disable access\_logs | `bool` | `true` | no |
+| access\_logs\_prefix | The S3 log bucket prefix | `string` | `""` | no |
+| access\_logs\_region | The region for the access\_logs S3 bucket | `string` | `"us-east-1"` | no |
+| alb\_access\_logs\_s3\_bucket\_force\_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | `bool` | `false` | no |
+| attributes | Additional attributes (\_e.g.\_ "1") | `list(string)` | `[]` | no |
+| certificate\_arn | The ARN of the default SSL certificate for HTTPS listener | `string` | `""` | no |
+| cross\_zone\_load\_balancing\_enabled | A boolean flag to enable/disable cross zone load balancing | `bool` | `true` | no |
+| deletion\_protection\_enabled | A boolean flag to enable/disable deletion protection for ALB | `bool` | `false` | no |
+| delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
+| deregistration\_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | `number` | `15` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
+| health\_check\_healthy\_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | `number` | `2` | no |
+| health\_check\_interval | The duration in seconds in between health checks | `number` | `15` | no |
+| health\_check\_matcher | The HTTP response codes to indicate a healthy check | `string` | `"200-399"` | no |
+| health\_check\_path | The destination for the health check request | `string` | `"/"` | no |
+| health\_check\_timeout | The amount of time to wait in seconds before failing a health check request | `number` | `10` | no |
+| health\_check\_unhealthy\_threshold | The number of consecutive health check failures required before considering the target unhealthy | `number` | `2` | no |
+| http2\_enabled | A boolean flag to enable/disable HTTP/2 | `bool` | `true` | no |
+| http\_enabled | A boolean flag to enable/disable HTTP listener | `bool` | `true` | no |
+| http\_ingress\_cidr\_blocks | List of CIDR blocks to allow in HTTP security group | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| http\_ingress\_prefix\_list\_ids | List of prefix list IDs for allowing access to HTTP ingress security group | `list(string)` | `[]` | no |
+| http\_port | The port for the HTTP listener | `number` | `80` | no |
+| http\_redirect | A boolean flag to enable/disable HTTP redirect to HTTPS | `bool` | `false` | no |
+| https\_enabled | A boolean flag to enable/disable HTTPS listener | `bool` | `false` | no |
+| https\_ingress\_cidr\_blocks | List of CIDR blocks to allow in HTTPS security group | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| https\_ingress\_prefix\_list\_ids | List of prefix list IDs for allowing access to HTTPS ingress security group | `list(string)` | `[]` | no |
+| https\_port | The port for the HTTPS listener | `number` | `443` | no |
+| https\_ssl\_policy | The name of the SSL Policy for the listener | `string` | `"ELBSecurityPolicy-2015-05"` | no |
+| idle\_timeout | The time in seconds that the connection is allowed to be idle | `number` | `60` | no |
+| internal | A boolean flag to determine whether the ALB should be internal | `bool` | `false` | no |
+| ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`. | `string` | `"ipv4"` | no |
+| name | Name of the application | `string` | n/a | yes |
+| namespace | Namespace (e.g. `eg` or `cp`) | `string` | `""` | no |
+| security\_group\_ids | A list of additional security group IDs to allow access to ALB | `list(string)` | `[]` | no |
+| stage | Stage (e.g. `prod`, `dev`, `staging`) | `string` | `""` | no |
+| subnet\_ids | A list of subnet IDs to associate with ALB | `list(string)` | n/a | yes |
+| tags | Additional tags (\_e.g.\_ { BusinessUnit : ABC }) | `map(string)` | `{}` | no |
+| target\_group\_additional\_tags | The additional tags to apply to the target group | `map(string)` | `{}` | no |
+| target\_group\_name | The name for the default target group, uses a module label name if left empty | `string` | `""` | no |
+| target\_group\_port | The port for the default target group | `number` | `80` | no |
+| target\_group\_protocol | The protocol for the default target group HTTP or HTTPS | `string` | `"HTTP"` | no |
+| target\_group\_target\_type | The type (`instance`, `ip` or `lambda`) of targets that can be registered with the target group | `string` | `"ip"` | no |
+| vpc\_id | VPC ID to associate with ALB | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| access_logs_bucket_id | The S3 bucket ID for access logs |
-| alb_arn | The ARN of the ALB |
-| alb_arn_suffix | The ARN suffix of the ALB |
-| alb_dns_name | DNS name of ALB |
-| alb_name | The ARN suffix of the ALB |
-| alb_zone_id | The ID of the zone which ALB is provisioned |
-| default_target_group_arn | The default target group ARN |
-| http_listener_arn | The ARN of the HTTP forwarding listener |
-| http_redirect_listener_arn | The ARN of the HTTP to HTTPS redirect listener |
-| https_listener_arn | The ARN of the HTTPS listener |
-| listener_arns | A list of all the listener ARNs |
-| security_group_id | The security group ID of the ALB |
+| access\_logs\_bucket\_id | The S3 bucket ID for access logs |
+| alb\_arn | The ARN of the ALB |
+| alb\_arn\_suffix | The ARN suffix of the ALB |
+| alb\_dns\_name | DNS name of ALB |
+| alb\_name | The ARN suffix of the ALB |
+| alb\_zone\_id | The ID of the zone which ALB is provisioned |
+| default\_target\_group\_arn | The default target group ARN |
+| http\_listener\_arn | The ARN of the HTTP forwarding listener |
+| http\_redirect\_listener\_arn | The ARN of the HTTP to HTTPS redirect listener |
+| https\_listener\_arn | The ARN of the HTTPS listener |
+| listener\_arns | A list of all the listener ARNs |
+| security\_group\_id | The security group ID of the ALB |
 
