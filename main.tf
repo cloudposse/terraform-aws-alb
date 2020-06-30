@@ -48,17 +48,24 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source        = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.3.0"
-  enabled       = var.access_logs_enabled
-  name          = var.name
-  namespace     = var.namespace
-  stage         = var.stage
-  environment   = var.environment
-  attributes    = compact(concat(var.attributes, ["alb", "access", "logs"]))
-  delimiter     = var.delimiter
-  tags          = var.tags
-  region        = var.access_logs_region
-  force_destroy = var.alb_access_logs_s3_bucket_force_destroy
+  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.4.0"
+  enabled                            = var.access_logs_enabled
+  name                               = var.name
+  namespace                          = var.namespace
+  stage                              = var.stage
+  environment                        = var.environment
+  attributes                         = compact(concat(var.attributes, ["alb", "access", "logs"]))
+  delimiter                          = var.delimiter
+  tags                               = var.tags
+  region                             = var.access_logs_region
+  lifecycle_rule_enabled             = var.lifecycle_rule_enabled
+  enable_glacier_transition          = var.enable_glacier_transition
+  expiration_days                    = var.expiration_days
+  glacier_transition_days            = var.glacier_transition_days
+  noncurrent_version_expiration_days = var.noncurrent_version_expiration_days
+  noncurrent_version_transition_days = var.noncurrent_version_transition_days
+  standard_transition_days           = var.standard_transition_days
+  force_destroy                      = var.alb_access_logs_s3_bucket_force_destroy
 }
 
 resource "aws_lb" "default" {
