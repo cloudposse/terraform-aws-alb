@@ -28,7 +28,10 @@
 | deletion\_protection\_enabled | A boolean flag to enable/disable deletion protection for ALB | `bool` | `false` | no |
 | delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
 | deregistration\_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | `number` | `15` | no |
+| enable\_glacier\_transition | Enables the transition of lb logs to AWS Glacier | `bool` | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
+| expiration\_days | Number of days after which to expunge s3 logs | `number` | `90` | no |
+| glacier\_transition\_days | Number of days after which to move s3 logs to the glacier storage tier | `number` | `60` | no |
 | health\_check\_healthy\_threshold | The number of consecutive health checks successes required before considering an unhealthy target healthy | `number` | `2` | no |
 | health\_check\_interval | The duration in seconds in between health checks | `number` | `15` | no |
 | health\_check\_matcher | The HTTP response codes to indicate a healthy check | `string` | `"200-399"` | no |
@@ -49,10 +52,14 @@
 | idle\_timeout | The time in seconds that the connection is allowed to be idle | `number` | `60` | no |
 | internal | A boolean flag to determine whether the ALB should be internal | `bool` | `false` | no |
 | ip\_address\_type | The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`. | `string` | `"ipv4"` | no |
+| lifecycle\_rule\_enabled | A boolean that indicates whether the s3 log bucket lifecycle rule should be enabled. | `bool` | `false` | no |
 | name | Name of the application | `string` | n/a | yes |
 | namespace | Namespace (e.g. `eg` or `cp`) | `string` | `""` | no |
+| noncurrent\_version\_expiration\_days | Specifies when noncurrent s3 log versions expire | `number` | `90` | no |
+| noncurrent\_version\_transition\_days | Specifies when noncurrent s3 log versions transition | `number` | `30` | no |
 | security\_group\_ids | A list of additional security group IDs to allow access to ALB | `list(string)` | `[]` | no |
 | stage | Stage (e.g. `prod`, `dev`, `staging`) | `string` | `""` | no |
+| standard\_transition\_days | Number of days to persist logs in standard storage tier before moving to the infrequent access tier | `number` | `30` | no |
 | subnet\_ids | A list of subnet IDs to associate with ALB | `list(string)` | n/a | yes |
 | tags | Additional tags (\_e.g.\_ { BusinessUnit : ABC }) | `map(string)` | `{}` | no |
 | target\_group\_additional\_tags | The additional tags to apply to the target group | `map(string)` | `{}` | no |
