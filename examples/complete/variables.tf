@@ -145,3 +145,11 @@ variable "target_group_target_type" {
   type        = string
   description = "The type (`instance`, `ip` or `lambda`) of targets that can be registered with the target group"
 }
+
+variable "stickiness" {
+  type = object({
+    cookie_duration = number
+    enabled         = bool
+  })
+  description = "Target group sticky configuration"
+}

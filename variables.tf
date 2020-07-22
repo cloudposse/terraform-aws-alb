@@ -294,3 +294,12 @@ variable "standard_transition_days" {
   description = "Number of days to persist logs in standard storage tier before moving to the infrequent access tier"
   default     = 30
 }
+
+variable "stickiness" {
+  type = object({
+    cookie_duration = number
+    enabled         = bool
+  })
+  description = "Target group sticky configuration"
+  default     = null
+}

@@ -49,3 +49,8 @@ health_check_matcher = "200-399"
 target_group_port = 80
 
 target_group_target_type = "ip"
+
+stickiness = {
+  cookie_duration = 60
+  enabled         = true
+}

@@ -60,6 +60,7 @@
 | security\_group\_ids | A list of additional security group IDs to allow access to ALB | `list(string)` | `[]` | no |
 | stage | Stage (e.g. `prod`, `dev`, `staging`) | `string` | `""` | no |
 | standard\_transition\_days | Number of days to persist logs in standard storage tier before moving to the infrequent access tier | `number` | `30` | no |
+| stickiness | Target group sticky configuration | <pre>object({<br>    cookie_duration = number<br>    enabled         = bool<br>  })</pre> | `null` | no |
 | subnet\_ids | A list of subnet IDs to associate with ALB | `list(string)` | n/a | yes |
 | tags | Additional tags (\_e.g.\_ { BusinessUnit : ABC }) | `map(string)` | `{}` | no |
 | target\_group\_additional\_tags | The additional tags to apply to the target group | `map(string)` | `{}` | no |

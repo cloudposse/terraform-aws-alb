@@ -59,5 +59,6 @@ module "alb" {
   health_check_matcher                    = var.health_check_matcher
   target_group_port                       = var.target_group_port
   target_group_target_type                = var.target_group_target_type
+  stickiness                              = var.stickiness
   tags                                    = var.tags
 }

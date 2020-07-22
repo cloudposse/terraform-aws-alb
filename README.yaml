@@ -2,18 +2,20 @@ name: terraform-aws-alb
 license: APACHE2
 github_repo: cloudposse/terraform-aws-alb
 badges:
-- name: Latest Release
-  image: https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg
-  url: https://github.com/cloudposse/terraform-aws-alb/releases/latest
-- name: Slack Community
-  image: https://slack.cloudposse.com/badge.svg
-  url: https://slack.cloudposse.com
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg
+    url: https://github.com/cloudposse/terraform-aws-alb/releases/latest
+  - name: Slack Community
+    image: https://slack.cloudposse.com/badge.svg
+    url: https://slack.cloudposse.com
 related:
-- name: terraform-aws-alb-ingress
-  description: Terraform module to provision an HTTP style ingress rule based on hostname
-    and path for an ALB
-  url: https://github.com/cloudposse/terraform-aws-alb-ingress
-description: Terraform module to create an ALB, default ALB listener(s), and a default
+  - name: terraform-aws-alb-ingress
+    description:
+      Terraform module to provision an HTTP style ingress rule based on hostname
+      and path for an ALB
+    url: https://github.com/cloudposse/terraform-aws-alb-ingress
+description:
+  Terraform module to create an ALB, default ALB listener(s), and a default
   ALB target and related security groups.
 usage: |-
   For a complete example, see [examples/complete](examples/complete).
@@ -82,20 +84,21 @@ usage: |-
       health_check_matcher                    = var.health_check_matcher
       target_group_port                       = var.target_group_port
       target_group_target_type                = var.target_group_target_type
+      stickiness                              = var.stickiness
       tags                                    = var.tags
     }
   ```
 include:
-- docs/targets.md
-- docs/terraform.md
+  - docs/targets.md
+  - docs/terraform.md
 contributors:
-- name: Erik Osterman
-  github: osterman
-- name: Igor Rodionov
-  github: goruha
-- name: Andriy Knysh
-  github: aknysh
-- name: Sarkis Varozian
-  github: sarkis
-- name: Adam Crews
-  github: adamcrews
+  - name: Erik Osterman
+    github: osterman
+  - name: Igor Rodionov
+    github: goruha
+  - name: Andriy Knysh
+    github: aknysh
+  - name: Sarkis Varozian
+    github: sarkis
+  - name: Adam Crews
+    github: adamcrews

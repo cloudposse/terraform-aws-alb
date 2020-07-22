@@ -121,6 +121,15 @@ resource "aws_lb_target_group" "default" {
     matcher             = var.health_check_matcher
   }
 
+  dynamic "stickiness" {
+    for_each = var.stickiness == null ? [] : [var.stickiness]
+    content {
+      type            = "lb_cookie"
+      cookie_duration = stickiness.value.cookie_duration
+      enabled         = var.target_group_protocol == "TCP" ? false : stickiness.value.enabled
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }
