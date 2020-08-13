@@ -1,5 +1,5 @@
 module "default_label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
   attributes  = var.attributes
   delimiter   = var.delimiter
   name        = var.name
@@ -93,7 +93,7 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.16.0"
+  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
   attributes  = concat(var.attributes, ["default"])
   delimiter   = var.delimiter
   name        = var.name
