@@ -1,9 +1,10 @@
+<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
 | terraform | >= 0.12.0, < 0.14.0 |
-| aws | ~> 2.0 |
+| aws | >= 2.0, < 4.0 |
 | local | ~> 1.3 |
 | null | ~> 2.0 |
 | template | ~> 2.0 |
@@ -12,7 +13,7 @@
 
 | Name | Version |
 |------|---------|
-| aws | ~> 2.0 |
+| aws | >= 2.0, < 4.0 |
 
 ## Inputs
 
@@ -20,7 +21,6 @@
 |------|-------------|------|---------|:--------:|
 | access\_logs\_enabled | A boolean flag to enable/disable access\_logs | `bool` | `true` | no |
 | access\_logs\_prefix | The S3 log bucket prefix | `string` | `""` | no |
-| access\_logs\_region | The region for the access\_logs S3 bucket | `string` | `"us-east-1"` | no |
 | alb\_access\_logs\_s3\_bucket\_force\_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | `bool` | `false` | no |
 | attributes | Additional attributes (\_e.g.\_ "1") | `list(string)` | `[]` | no |
 | certificate\_arn | The ARN of the default SSL certificate for HTTPS listener | `string` | `""` | no |
@@ -87,3 +87,4 @@
 | listener\_arns | A list of all the listener ARNs |
 | security\_group\_id | The security group ID of the ALB |
 
+<!-- markdownlint-restore -->
