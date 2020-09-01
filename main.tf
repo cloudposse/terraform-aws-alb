@@ -48,7 +48,7 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.7.0"
+  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.7.1"
   enabled                            = var.access_logs_enabled
   name                               = var.name
   namespace                          = var.namespace
@@ -57,7 +57,6 @@ module "access_logs" {
   attributes                         = compact(concat(var.attributes, ["alb", "access", "logs"]))
   delimiter                          = var.delimiter
   tags                               = var.tags
-  region                             = var.access_logs_region
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
