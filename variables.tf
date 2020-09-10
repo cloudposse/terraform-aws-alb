@@ -55,6 +55,12 @@ variable "security_group_ids" {
   description = "A list of additional security group IDs to allow access to ALB"
 }
 
+variable "alb_name" {
+  type        = string
+  default     = ""
+  description = "The name for the load balancer, uses a module label name if left empty"
+}
+
 variable "internal" {
   type        = bool
   default     = false

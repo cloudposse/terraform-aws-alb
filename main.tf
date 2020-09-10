@@ -69,7 +69,7 @@ module "access_logs" {
 }
 
 resource "aws_lb" "default" {
-  name               = module.default_label.id
+  name               = var.alb_name == "" ? module.default_label.id : var.alb_name
   tags               = module.default_label.tags
   internal           = var.internal
   load_balancer_type = "application"
