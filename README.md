@@ -186,6 +186,7 @@ Available targets:
 | delimiter | Delimiter between `namespace`, `stage`, `name` and `attributes` | `string` | `"-"` | no |
 | deregistration\_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | `number` | `15` | no |
 | enable\_glacier\_transition | Enables the transition of lb logs to AWS Glacier | `bool` | `true` | no |
+| enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
 | expiration\_days | Number of days after which to expunge s3 logs | `number` | `90` | no |
 | glacier\_transition\_days | Number of days after which to move s3 logs to the glacier storage tier | `number` | `60` | no |
