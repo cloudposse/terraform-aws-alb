@@ -1,16 +1,10 @@
 module "default_label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
-  attributes  = var.attributes
-  delimiter   = var.delimiter
-  name        = var.name
-  namespace   = var.namespace
-  stage       = var.stage
-  environment = var.environment
-  tags        = var.tags
+  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
+  context = module.this.context
 }
 
 resource "aws_security_group" "default" {
-  count       = var.enabled ? 1 : 0
+  count       = module.this.enabled ? 1 : 0
   description = "Controls access to the ALB (HTTP/HTTPS)"
   vpc_id      = var.vpc_id
   name        = module.default_label.id
@@ -18,7 +12,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  count             = var.enabled ? 1 : 0
+  count             = module.this.enabled ? 1 : 0
   type              = "egress"
   from_port         = "0"
   to_port           = "0"
@@ -28,7 +22,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "http_ingress" {
-  count             = var.enabled && var.http_enabled ? 1 : 0
+  count             = module.this.enabled && var.http_enabled ? 1 : 0
   type              = "ingress"
   from_port         = var.http_port
   to_port           = var.http_port
@@ -39,7 +33,7 @@ resource "aws_security_group_rule" "http_ingress" {
 }
 
 resource "aws_security_group_rule" "https_ingress" {
-  count             = var.enabled && var.https_enabled ? 1 : 0
+  count             = module.this.enabled && var.https_enabled ? 1 : 0
   type              = "ingress"
   from_port         = var.https_port
   to_port           = var.https_port
@@ -50,15 +44,15 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.7.0"
-  enabled                            = var.enabled && var.access_logs_enabled
-  name                               = var.name
-  namespace                          = var.namespace
-  stage                              = var.stage
-  environment                        = var.environment
-  attributes                         = compact(concat(var.attributes, ["alb", "access", "logs"]))
-  delimiter                          = var.delimiter
-  tags                               = var.tags
+  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.8.0"
+  enabled                            = module.this.enabled && var.access_logs_enabled
+  name                               = module.this.name
+  namespace                          = module.this.namespace
+  stage                              = module.this.stage
+  environment                        = module.this.environment
+  attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
+  delimiter                          = module.this.delimiter
+  tags                               = module.this.tags
   region                             = var.access_logs_region
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
@@ -71,7 +65,7 @@ module "access_logs" {
 }
 
 resource "aws_lb" "default" {
-  count              = var.enabled ? 1 : 0
+  count              = module.this.enabled ? 1 : 0
   name               = module.default_label.id
   tags               = module.default_label.tags
   internal           = var.internal
@@ -96,18 +90,13 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source      = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.17.0"
-  attributes  = concat(var.attributes, ["default"])
-  delimiter   = var.delimiter
-  name        = var.name
-  namespace   = var.namespace
-  stage       = var.stage
-  environment = var.environment
-  tags        = var.tags
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
+  attributes = concat(module.this.attributes, ["default"])
+  context    = module.this.context
 }
 
 resource "aws_lb_target_group" "default" {
-  count                = var.enabled ? 1 : 0
+  count                = module.this.enabled ? 1 : 0
   name                 = var.target_group_name == "" ? module.default_target_group_label.id : var.target_group_name
   port                 = var.target_group_port
   protocol             = var.target_group_protocol
@@ -157,7 +146,7 @@ resource "aws_lb_listener" "http_forward" {
 }
 
 resource "aws_lb_listener" "http_redirect" {
-  count             = var.enabled && var.http_enabled && var.http_redirect == true ? 1 : 0
+  count             = module.this.enabled && var.http_enabled && var.http_redirect == true ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
@@ -175,7 +164,7 @@ resource "aws_lb_listener" "http_redirect" {
 }
 
 resource "aws_lb_listener" "https" {
-  count             = var.enabled && var.https_enabled ? 1 : 0
+  count             = module.this.enabled && var.https_enabled ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
 
   port            = var.https_port
