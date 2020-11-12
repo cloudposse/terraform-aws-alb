@@ -1,14 +1,9 @@
-module "default_label" {
-  source  = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
-  context = module.this.context
-}
-
 resource "aws_security_group" "default" {
   count       = module.this.enabled ? 1 : 0
   description = "Controls access to the ALB (HTTP/HTTPS)"
   vpc_id      = var.vpc_id
-  name        = module.default_label.id
-  tags        = module.default_label.tags
+  name        = module.this.id
+  tags        = module.this.tags
 }
 
 resource "aws_security_group_rule" "egress" {
@@ -44,7 +39,7 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.8.0"
+  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.9.0"
   enabled                            = module.this.enabled && var.access_logs_enabled
   name                               = module.this.name
   namespace                          = module.this.namespace
@@ -53,7 +48,6 @@ module "access_logs" {
   attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
   delimiter                          = module.this.delimiter
   tags                               = module.this.tags
-  region                             = var.access_logs_region
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
@@ -66,8 +60,8 @@ module "access_logs" {
 
 resource "aws_lb" "default" {
   count              = module.this.enabled ? 1 : 0
-  name               = module.default_label.id
-  tags               = module.default_label.tags
+  name               = module.this.id
+  tags               = module.this.tags
   internal           = var.internal
   load_balancer_type = "application"
 

@@ -33,11 +33,6 @@ variable "access_logs_enabled" {
   description = "A boolean flag to enable/disable access_logs"
 }
 
-variable "access_logs_region" {
-  type        = string
-  description = "The region for the access_logs S3 bucket"
-}
-
 variable "cross_zone_load_balancing_enabled" {
   type        = bool
   description = "A boolean flag to enable/disable cross zone load balancing"

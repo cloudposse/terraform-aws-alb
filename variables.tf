@@ -98,12 +98,6 @@ variable "access_logs_enabled" {
   description = "A boolean flag to enable/disable access_logs"
 }
 
-variable "access_logs_region" {
-  type        = string
-  default     = "us-east-1"
-  description = "The region for the access_logs S3 bucket"
-}
-
 variable "cross_zone_load_balancing_enabled" {
   type        = bool
   default     = true
