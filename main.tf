@@ -48,7 +48,6 @@ module "access_logs" {
   attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
   delimiter                          = module.this.delimiter
   tags                               = module.this.tags
-  region                             = var.access_logs_region
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days

@@ -117,7 +117,6 @@ For automated test of the complete example using `bats` and `Terratest`, see [te
     http_redirect                           = var.http_redirect
     access_logs_enabled                     = var.access_logs_enabled
     alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
-    access_logs_region                      = var.access_logs_region
     cross_zone_load_balancing_enabled       = var.cross_zone_load_balancing_enabled
     http2_enabled                           = var.http2_enabled
     idle_timeout                            = var.idle_timeout
@@ -177,7 +176,6 @@ Available targets:
 |------|-------------|------|---------|:--------:|
 | access\_logs\_enabled | A boolean flag to enable/disable access\_logs | `bool` | `true` | no |
 | access\_logs\_prefix | The S3 log bucket prefix | `string` | `""` | no |
-| access\_logs\_region | The region for the access\_logs S3 bucket | `string` | `"us-east-1"` | no |
 | additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | alb\_access\_logs\_s3\_bucket\_force\_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | `bool` | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
