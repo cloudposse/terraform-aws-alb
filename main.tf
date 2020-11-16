@@ -90,7 +90,7 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  count                = module.this.enabled ? 1 : 0
+  count                = module.this.enabled && module.this.enable_default_target_group ? 1 : 0
   name                 = var.target_group_name == "" ? module.default_target_group_label.id : var.target_group_name
   port                 = var.target_group_port
   protocol             = var.target_group_protocol
