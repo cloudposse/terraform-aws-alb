@@ -182,12 +182,6 @@ variable "alb_access_logs_s3_bucket_force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
 }
 
-variable "enable_default_target_group" {
-    type        = bool
-    default     = true
-    description = "A boolean that indicates if the module should create a default target group for the ALB."
-}
-
 variable "target_group_port" {
   type        = number
   default     = 80
