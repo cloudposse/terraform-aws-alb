@@ -140,6 +140,12 @@ variable "health_check_path" {
   description = "The destination for the health check request"
 }
 
+variable "health_check_port" {
+  type        = string
+  default     = "traffic-port"
+  description = "The port to use for the healthcheck"
+}
+
 variable "health_check_timeout" {
   type        = number
   default     = 10

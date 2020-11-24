@@ -194,6 +194,7 @@ Available targets:
 | health\_check\_interval | The duration in seconds in between health checks | `number` | `15` | no |
 | health\_check\_matcher | The HTTP response codes to indicate a healthy check | `string` | `"200-399"` | no |
 | health\_check\_path | The destination for the health check request | `string` | `"/"` | no |
+| health\_check\_port | The port to use for the healthcheck | `string` | `"traffic-port"` | no |
 | health\_check\_timeout | The amount of time to wait in seconds before failing a health check request | `number` | `10` | no |
 | health\_check\_unhealthy\_threshold | The number of consecutive health check failures required before considering the target unhealthy | `number` | `2` | no |
 | http2\_enabled | A boolean flag to enable/disable HTTP/2 | `bool` | `true` | no |
