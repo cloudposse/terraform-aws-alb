@@ -264,6 +264,7 @@ variable "stickiness" {
 }
 
 variable "additional_certs" {
-  type        = list
+  type        = list{string}
   description = "A list of additonal certs to add to the https listerner"
+  default = []
 }
