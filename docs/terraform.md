@@ -21,6 +21,7 @@
 |------|-------------|------|---------|:--------:|
 | access\_logs\_enabled | A boolean flag to enable/disable access\_logs | `bool` | `true` | no |
 | access\_logs\_prefix | The S3 log bucket prefix | `string` | `""` | no |
+| additional\_certs | A list of additonal certs to add to the https listerner | `list` | n/a | yes |
 | additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | alb\_access\_logs\_s3\_bucket\_force\_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | `bool` | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |

@@ -262,3 +262,8 @@ variable "stickiness" {
   description = "Target group sticky configuration"
   default     = null
 }
+
+variable "additional_certs" {
+  type        = list
+  description = "A list of additonal certs to add to the https listerner"
+}
