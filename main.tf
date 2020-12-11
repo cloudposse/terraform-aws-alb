@@ -174,7 +174,7 @@ resource "aws_lb_listener" "https" {
 }
 resource "aws_lb_listener_certificate" "https_sni" {
   count           = module.this.enabled && var.https_enabled && var.additional_certs != [] ? length(var.var.additional_certs) : 0
-  listener_arn    = resource.aws_lb_listener.https.arn
+  listener_arn    = aws_lb_listener.https.arn
   certificate_arn = var.additional_certs[count.index]
 }
 
