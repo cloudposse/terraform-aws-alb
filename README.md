@@ -64,8 +64,15 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 ## Usage
 
 
-**IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
-Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-aws-alb/releases).
+**IMPORTANT:** We do not pin modules to versions in our examples because of the
+difficulty of keeping the versions in the documentation in sync with the latest released versions.
+We highly recommend that in your code you pin the version to the exact version you are
+using so that your infrastructure remains stable, and update versions in a
+systematic way so that they do not catch you by surprise.
+
+Also, because of a bug in the Terraform registry ([hashicorp/terraform#21417](https://github.com/hashicorp/terraform/issues/21417)),
+the registry shows many of our inputs as required when in fact they are optional.
+The table below correctly indicates which inputs are required.
 
 
 For a complete example, see [examples/complete](examples/complete).
@@ -178,7 +185,7 @@ Available targets:
 |------|-------------|------|---------|:--------:|
 | access\_logs\_enabled | A boolean flag to enable/disable access\_logs | `bool` | `true` | no |
 | access\_logs\_prefix | The S3 log bucket prefix | `string` | `""` | no |
-| additional\_certs | A list of additonal certs to add to the https listerner | `list` | n/a | yes |
+| additional\_certs | A list of additonal certs to add to the https listerner | `list(string)` | `[]` | no |
 | additional\_tag\_map | Additional tags for appending to tags\_as\_list\_of\_maps. Not added to `tags`. | `map(string)` | `{}` | no |
 | alb\_access\_logs\_s3\_bucket\_force\_destroy | A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error | `bool` | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | `list(string)` | `[]` | no |
