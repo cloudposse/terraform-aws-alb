@@ -172,3 +172,9 @@ resource "aws_lb_listener" "https" {
     type             = "forward"
   }
 }
+resource "aws_lb_listener_certificate" "https_sni" {
+  count           = module.this.enabled && var.https_enabled && var.additional_certs != [] ? length(var.additional_certs) : 0
+  listener_arn    = join("", aws_lb_listener.https.*.arn)
+  certificate_arn = var.additional_certs[count.index]
+}
+
