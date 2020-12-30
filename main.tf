@@ -39,7 +39,8 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source                             = "git::https://github.com/cloudposse/terraform-aws-lb-s3-bucket.git?ref=tags/0.9.0"
+  source                             = "cloudposse/lb-s3-bucket/aws"
+  version                            = "0.9.0"
   enabled                            = module.this.enabled && var.access_logs_enabled
   name                               = module.this.name
   namespace                          = module.this.namespace
@@ -84,7 +85,8 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.19.2"
+  source     = "cloudposse/label/null"
+  version    = "0.22.1"
   attributes = concat(module.this.attributes, ["default"])
   context    = module.this.context
 }
@@ -177,4 +179,3 @@ resource "aws_lb_listener_certificate" "https_sni" {
   listener_arn    = join("", aws_lb_listener.https.*.arn)
   certificate_arn = var.additional_certs[count.index]
 }
-
