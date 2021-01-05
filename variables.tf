@@ -214,7 +214,7 @@ variable "target_group_additional_tags" {
 
 variable "listener_http_fixed_response" {
   description = "Have the HTTP listener return a fixed response for the default action."
-  type        = object({
+  type = object({
     content_type = string
     message_body = string
     status_code  = string
@@ -224,7 +224,7 @@ variable "listener_http_fixed_response" {
 
 variable "listener_https_fixed_response" {
   description = "Have the HTTPS listener return a fixed response for the default action."
-  type        = object({
+  type = object({
     content_type = string
     message_body = string
     status_code  = string
