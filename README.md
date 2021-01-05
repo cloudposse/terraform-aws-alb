@@ -112,7 +112,9 @@ For automated test of the complete example using `bats` and `Terratest`, see [te
   }
 
   module "alb" {
-    source                                  = "git::https://github.com/cloudposse/terraform-aws-alb.git?ref=master"
+    source = "cloudposse/alb/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    # version     = "x.x.x"
     namespace                               = var.namespace
     stage                                   = var.stage
     name                                    = var.name
@@ -349,7 +351,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2020 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2021 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 
