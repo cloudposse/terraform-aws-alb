@@ -212,6 +212,26 @@ variable "target_group_additional_tags" {
   description = "The additional tags to apply to the target group"
 }
 
+variable "listener_http_fixed_response" {
+  description = "Have the HTTP listener return a fixed response for the default action."
+  type = object({
+    content_type = string
+    message_body = string
+    status_code  = string
+  })
+  default = null
+}
+
+variable "listener_https_fixed_response" {
+  description = "Have the HTTPS listener return a fixed response for the default action."
+  type = object({
+    content_type = string
+    message_body = string
+    status_code  = string
+  })
+  default = null
+}
+
 variable "lifecycle_rule_enabled" {
   type        = bool
   description = "A boolean that indicates whether the s3 log bucket lifecycle rule should be enabled."
