@@ -137,8 +137,17 @@ resource "aws_lb_listener" "http_forward" {
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = join("", aws_lb_target_group.default.*.arn)
-    type             = "forward"
+    target_group_arn = var.listener_http_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
+    type             = var.listener_http_fixed_response != null ? "fixed-response" : "forward"
+
+    dynamic "fixed_response" {
+      for_each = var.listener_http_fixed_response != null ? [var.listener_http_fixed_response] : []
+      content {
+        content_type = fixed_response.value["content_type"]
+        message_body = fixed_response.value["message_body"]
+        status_code  = fixed_response.value["status_code"]
+      }
+    }
   }
 }
 
@@ -170,10 +179,20 @@ resource "aws_lb_listener" "https" {
   certificate_arn = var.certificate_arn
 
   default_action {
-    target_group_arn = join("", aws_lb_target_group.default.*.arn)
-    type             = "forward"
+    target_group_arn = var.listener_https_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
+    type             = var.listener_https_fixed_response != null ? "fixed-response" : "forward"
+
+    dynamic "fixed_response" {
+      for_each = var.listener_https_fixed_response != null ? [var.listener_https_fixed_response] : []
+      content {
+        content_type = fixed_response.value["content_type"]
+        message_body = fixed_response.value["message_body"]
+        status_code  = fixed_response.value["status_code"]
+      }
+    }
   }
 }
+
 resource "aws_lb_listener_certificate" "https_sni" {
   count           = module.this.enabled && var.https_enabled && var.additional_certs != [] ? length(var.additional_certs) : 0
   listener_arn    = join("", aws_lb_listener.https.*.arn)
