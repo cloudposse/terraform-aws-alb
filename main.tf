@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "https_ingress" {
 
 module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
-  version                            = "0.9.0"
+  version                            = "0.10.0"
   enabled                            = module.this.enabled && var.access_logs_enabled
   name                               = module.this.name
   namespace                          = module.this.namespace
