@@ -288,3 +288,9 @@ variable "additional_certs" {
   description = "A list of additonal certs to add to the https listerner"
   default     = []
 }
+
+variable "security_group_enabled" {
+  type        = bool
+  description = "Enables the security group"
+  default     = true
+}

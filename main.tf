@@ -1,5 +1,5 @@
 resource "aws_security_group" "default" {
-  count       = module.this.enabled ? 1 : 0
+  count       = module.this.enabled && var.security_group_enabled ? 1 : 0
   description = "Controls access to the ALB (HTTP/HTTPS)"
   vpc_id      = var.vpc_id
   name        = module.this.id
@@ -7,7 +7,7 @@ resource "aws_security_group" "default" {
 }
 
 resource "aws_security_group_rule" "egress" {
-  count             = module.this.enabled ? 1 : 0
+  count             = module.this.enabled && var.security_group_enabled ? 1 : 0
   type              = "egress"
   from_port         = "0"
   to_port           = "0"
@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "egress" {
 }
 
 resource "aws_security_group_rule" "http_ingress" {
-  count             = module.this.enabled && var.http_enabled ? 1 : 0
+  count             = module.this.enabled && var.security_group_enabled && var.http_enabled ? 1 : 0
   type              = "ingress"
   from_port         = var.http_port
   to_port           = var.http_port
@@ -28,7 +28,7 @@ resource "aws_security_group_rule" "http_ingress" {
 }
 
 resource "aws_security_group_rule" "https_ingress" {
-  count             = module.this.enabled && var.https_enabled ? 1 : 0
+  count             = module.this.enabled && var.security_group_enabled && var.https_enabled ? 1 : 0
   type              = "ingress"
   from_port         = var.https_port
   to_port           = var.https_port
