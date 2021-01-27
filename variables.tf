@@ -289,7 +289,7 @@ variable "additional_certs" {
   default     = []
 }
 
-variable "sg_default_enabled" {
+variable "security_group_enabled" {
   type        = bool
   description = "Enables the security group"
   default     = true
