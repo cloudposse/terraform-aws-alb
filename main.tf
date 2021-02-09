@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "https_ingress" {
 
 module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
-  version                            = "0.10.1"
+  version                            = "0.11.3"
   enabled                            = module.this.enabled && var.access_logs_enabled
   name                               = module.this.name
   namespace                          = module.this.namespace
@@ -86,7 +86,7 @@ resource "aws_lb" "default" {
 
 module "default_target_group_label" {
   source     = "cloudposse/label/null"
-  version    = "0.22.1"
+  version    = "0.24.1"
   attributes = concat(module.this.attributes, ["default"])
   context    = module.this.context
 }
