@@ -189,7 +189,7 @@ Available targets:
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13.0 |
-| aws | >= 2.0 |
+| aws | >= 2.54 |
 | local | >= 1.3 |
 | null | >= 2.0 |
 | template | >= 2.0 |
@@ -198,7 +198,26 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.0 |
+| aws | >= 2.54 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| access_logs | cloudposse/lb-s3-bucket/aws | 0.11.3 |
+| default_target_group_label | cloudposse/label/null | 0.24.1 |
+| this | cloudposse/label/null | 0.24.1 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_lb](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb) |
+| [aws_lb_listener](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener) |
+| [aws_lb_listener_certificate](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_certificate) |
+| [aws_lb_target_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group) |
+| [aws_security_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group) |
+| [aws_security_group_rule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule) |
 
 ## Modules
 
@@ -235,6 +254,7 @@ Available targets:
 | deletion\_protection\_enabled | A boolean flag to enable/disable deletion protection for ALB | `bool` | `false` | no |
 | delimiter | Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | deregistration\_delay | The amount of time to wait in seconds before changing the state of a deregistering target to unused | `number` | `15` | no |
+| drop\_invalid\_header\_fields | Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (true) or routed to targets (false). | `bool` | `false` | no |
 | enable\_glacier\_transition | Enables the transition of lb logs to AWS Glacier | `bool` | `true` | no |
 | enabled | Set to false to prevent the module from creating any resources | `bool` | `null` | no |
 | environment | Environment, e.g. 'uw2', 'us-west-2', OR 'prod', 'staging', 'dev', 'UAT' | `string` | `null` | no |
