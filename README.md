@@ -204,7 +204,7 @@ Available targets:
 
 | Name | Source | Version |
 |------|--------|---------|
-| access_logs | cloudposse/lb-s3-bucket/aws | 0.11.3 |
+| access_logs | cloudposse/lb-s3-bucket/aws | 0.11.4 |
 | default_target_group_label | cloudposse/label/null | 0.24.1 |
 | this | cloudposse/label/null | 0.24.1 |
 
