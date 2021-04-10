@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "https_ingress" {
 module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
   version                            = "0.11.4"
-  enabled                            = module.this.enabled && var.access_logs_enabled
+  enabled                            = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
   name                               = module.this.name
   namespace                          = module.this.namespace
   stage                              = module.this.stage
@@ -79,7 +79,7 @@ resource "aws_lb" "default" {
   drop_invalid_header_fields       = var.drop_invalid_header_fields
 
   access_logs {
-    bucket  = module.access_logs.bucket_id
+    bucket  = coalesce(var.access_logs_s3_bucket_id, module.access_logs.bucket_id)
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }
