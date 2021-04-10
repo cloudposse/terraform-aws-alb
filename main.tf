@@ -76,6 +76,7 @@ resource "aws_lb" "default" {
   idle_timeout                     = var.idle_timeout
   ip_address_type                  = var.ip_address_type
   enable_deletion_protection       = var.deletion_protection_enabled
+  drop_invalid_header_fields       = var.drop_invalid_header_fields
 
   access_logs {
     bucket  = coalesce(var.access_logs_s3_bucket_id, module.access_logs.bucket_id)

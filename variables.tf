@@ -140,6 +140,12 @@ variable "deregistration_delay" {
   description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused"
 }
 
+variable "drop_invalid_header_fields" {
+  type        = bool
+  default     = false
+  description = "Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (true) or routed to targets (false)."
+}
+
 variable "health_check_path" {
   type        = string
   default     = "/"
