@@ -57,6 +57,7 @@ module "access_logs" {
   noncurrent_version_transition_days = var.noncurrent_version_transition_days
   standard_transition_days           = var.standard_transition_days
   force_destroy                      = var.alb_access_logs_s3_bucket_force_destroy
+  context                            = module.this.context
 }
 
 resource "aws_lb" "default" {
