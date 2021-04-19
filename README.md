@@ -1,3 +1,4 @@
+
 <!-- markdownlint-disable -->
 # terraform-aws-alb [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg)](https://github.com/cloudposse/terraform-aws-alb/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
@@ -29,7 +30,6 @@
 
 Terraform module to create an ALB, default ALB listener(s), and a default ALB target and related security groups.
 
-
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
@@ -54,7 +54,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 We literally have [*hundreds of terraform modules*][terraform_modules] that are Open Source and well-maintained. Check them out!
-
 
 
 
