@@ -42,13 +42,7 @@ module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
   version                            = "0.11.4"
   enabled                            = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
-  name                               = module.this.name
-  namespace                          = module.this.namespace
-  stage                              = module.this.stage
-  environment                        = module.this.environment
   attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
-  delimiter                          = module.this.delimiter
-  tags                               = module.this.tags
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
