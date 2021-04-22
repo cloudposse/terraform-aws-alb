@@ -55,6 +55,8 @@ module "access_logs" {
 }
 
 resource "aws_lb" "default" {
+  #bridgecrew:skip=BC_AWS_NETWORKING_41 - Skipping Ensure that ALB Drops HTTP Headers
+  #bridgecrew:skip=BC_AWS_LOGGING_22 - Skipping Ensure ELBv2 has Access Logging Enabled
   count              = module.this.enabled ? 1 : 0
   name               = module.this.id
   tags               = module.this.tags
@@ -127,6 +129,8 @@ resource "aws_lb_target_group" "default" {
 }
 
 resource "aws_lb_listener" "http_forward" {
+  #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
+  #bridgecrew:skip=BC_AWS_NETWORKING_29 - Skipping Ensure ALB Protocol is HTTPS
   count             = var.http_enabled && var.http_redirect != true ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
@@ -166,6 +170,7 @@ resource "aws_lb_listener" "http_redirect" {
 }
 
 resource "aws_lb_listener" "https" {
+  #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
   count             = module.this.enabled && var.https_enabled ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
 
