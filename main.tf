@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "https_ingress" {
 
 module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
-  version                            = "0.11.4"
+  version                            = "0.12.0"
   enabled                            = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
   attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
