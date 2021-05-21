@@ -8,10 +8,47 @@ variable "subnet_ids" {
   description = "A list of subnet IDs to associate with ALB"
 }
 
-variable "security_group_ids" {
+variable "security_group_enabled" {
+  type        = bool
+  description = "Whether to create default Security Group for ALB."
+  default     = true
+}
+
+variable "security_group_description" {
+  type        = string
+  default     = "ALB Security Group"
+  description = "The Security Group description."
+}
+
+variable "security_group_use_name_prefix" {
+  type        = bool
+  default     = false
+  description = "Whether to create a default Security Group with unique name beginning with the normalized prefix."
+}
+
+variable "security_group_rules" {
+  type = list(any)
+  default = [
+    {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow all outbound traffic"
+    }
+  ]
+  description = <<-EOT
+    A list of maps of Security Group rules. 
+    The values of map is fully complated with `aws_security_group_rule` resource. 
+    To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
+  EOT
+}
+
+variable "security_groups" {
+  description = "A list of Security Group IDs to associate with ALB."
   type        = list(string)
   default     = []
-  description = "A list of additional security group IDs to allow access to ALB"
 }
 
 variable "internal" {
@@ -38,18 +75,6 @@ variable "http_redirect" {
   description = "A boolean flag to enable/disable HTTP redirect to HTTPS"
 }
 
-variable "http_ingress_cidr_blocks" {
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-  description = "List of CIDR blocks to allow in HTTP security group"
-}
-
-variable "http_ingress_prefix_list_ids" {
-  type        = list(string)
-  default     = []
-  description = "List of prefix list IDs for allowing access to HTTP ingress security group"
-}
-
 variable "certificate_arn" {
   type        = string
   default     = ""
@@ -66,18 +91,6 @@ variable "https_enabled" {
   type        = bool
   default     = false
   description = "A boolean flag to enable/disable HTTPS listener"
-}
-
-variable "https_ingress_cidr_blocks" {
-  type        = list(string)
-  default     = ["0.0.0.0/0"]
-  description = "List of CIDR blocks to allow in HTTPS security group"
-}
-
-variable "https_ingress_prefix_list_ids" {
-  type        = list(string)
-  default     = []
-  description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
 }
 
 variable "https_ssl_policy" {
@@ -299,10 +312,4 @@ variable "additional_certs" {
   type        = list(string)
   description = "A list of additonal certs to add to the https listerner"
   default     = []
-}
-
-variable "security_group_enabled" {
-  type        = bool
-  description = "Enables the security group"
-  default     = true
 }

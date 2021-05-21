@@ -3,11 +3,12 @@ package test
 import (
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
 	"math/rand"
 	"strconv"
 	"time"
+
+	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
 )
 
 // Test the Terraform module in examples/complete using Terratest.
@@ -68,4 +69,20 @@ func TestExamplesComplete(t *testing.T) {
 	httpListenerArn := terraform.Output(t, terraformOptions, "http_listener_arn")
 	// Verify we're getting back the outputs we expect
 	assert.Contains(t, httpListenerArn, "arn:aws:elasticloadbalancing:us-east-2:126450723953:listener/app/eg-test-alb-"+attributes[0])
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupName := terraform.Output(t, terraformOptions, "security_group_name")
+	expectedSecurityGroupName := "eg-test-alb-" + attributes[0]
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, expectedSecurityGroupName, securityGroupName)
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupID := terraform.Output(t, terraformOptions, "security_group_id")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupID, "sg-", "SG ID should contains substring 'sg-'")
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupARN := terraform.Output(t, terraformOptions, "security_group_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupARN, "arn:aws:ec2", "SG ID should contains substring 'arn:aws:ec2'")
 }

@@ -1,41 +1,18 @@
-resource "aws_security_group" "default" {
-  count       = module.this.enabled && var.security_group_enabled ? 1 : 0
-  description = "Controls access to the ALB (HTTP/HTTPS)"
-  vpc_id      = var.vpc_id
-  name        = module.this.id
-  tags        = module.this.tags
+locals {
+  security_group_enabled = module.this.enabled && var.security_group_enabled
 }
 
-resource "aws_security_group_rule" "egress" {
-  count             = module.this.enabled && var.security_group_enabled ? 1 : 0
-  type              = "egress"
-  from_port         = "0"
-  to_port           = "0"
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
-}
+module "security_group" {
+  source  = "cloudposse/security-group/aws"
+  version = "0.3.1"
 
-resource "aws_security_group_rule" "http_ingress" {
-  count             = module.this.enabled && var.security_group_enabled && var.http_enabled ? 1 : 0
-  type              = "ingress"
-  from_port         = var.http_port
-  to_port           = var.http_port
-  protocol          = "tcp"
-  cidr_blocks       = var.http_ingress_cidr_blocks
-  prefix_list_ids   = var.http_ingress_prefix_list_ids
-  security_group_id = join("", aws_security_group.default.*.id)
-}
+  use_name_prefix = var.security_group_use_name_prefix
+  rules           = var.security_group_rules
+  description     = var.security_group_description
+  vpc_id          = var.vpc_id
 
-resource "aws_security_group_rule" "https_ingress" {
-  count             = module.this.enabled && var.security_group_enabled && var.https_enabled ? 1 : 0
-  type              = "ingress"
-  from_port         = var.https_port
-  to_port           = var.https_port
-  protocol          = "tcp"
-  cidr_blocks       = var.https_ingress_cidr_blocks
-  prefix_list_ids   = var.https_ingress_prefix_list_ids
-  security_group_id = join("", aws_security_group.default.*.id)
+  enabled = local.security_group_enabled
+  context = module.this.context
 }
 
 module "access_logs" {
@@ -63,9 +40,7 @@ resource "aws_lb" "default" {
   internal           = var.internal
   load_balancer_type = "application"
 
-  security_groups = compact(
-    concat(var.security_group_ids, [join("", aws_security_group.default.*.id)]),
-  )
+  security_groups = compact(concat(module.security_group.*.id, var.security_groups))
 
   subnets                          = var.subnet_ids
   enable_cross_zone_load_balancing = var.cross_zone_load_balancing_enabled
