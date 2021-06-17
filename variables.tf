@@ -10,7 +10,7 @@ variable "subnet_ids" {
 
 variable "security_group_enabled" {
   type        = bool
-  description = "Whether to create default Security Group for ALB."
+  description = "Whether to create default Security Group for the ALB."
   default     = true
 }
 
@@ -46,7 +46,7 @@ variable "security_group_rules" {
 }
 
 variable "security_groups" {
-  description = "A list of Security Group IDs to associate with ALB."
+  description = "A list of Security Group IDs to associate with the ALB."
   type        = list(string)
   default     = []
 }
