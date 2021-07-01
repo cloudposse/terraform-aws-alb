@@ -39,8 +39,18 @@ output "alb_zone_id" {
 }
 
 output "security_group_id" {
-  description = "The security group ID of the ALB"
   value       = module.alb.security_group_id
+  description = "ALB Security Group ID"
+}
+
+output "security_group_arn" {
+  value       = module.alb.security_group_arn
+  description = "ALB Security Group ARN"
+}
+
+output "security_group_name" {
+  value       = module.alb.security_group_name
+  description = "ALB Security Group name"
 }
 
 output "default_target_group_arn" {

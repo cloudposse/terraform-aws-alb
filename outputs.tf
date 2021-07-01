@@ -24,8 +24,18 @@ output "alb_zone_id" {
 }
 
 output "security_group_id" {
-  description = "The security group ID of the ALB"
-  value       = join("", aws_security_group.default.*.id)
+  value       = module.security_group.id
+  description = "ALB Security Group ID"
+}
+
+output "security_group_arn" {
+  value       = module.security_group.arn
+  description = "ALB Security Group ARN"
+}
+
+output "security_group_name" {
+  value       = module.security_group.name
+  description = "ALB Security Group name"
 }
 
 output "default_target_group_arn" {
