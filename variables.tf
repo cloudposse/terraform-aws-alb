@@ -98,6 +98,12 @@ variable "access_logs_enabled" {
   description = "A boolean flag to enable/disable access_logs"
 }
 
+variable "access_logs_s3_bucket_id" {
+  type        = string
+  default     = null
+  description = "An external S3 Bucket name to store access logs in. If specified, no logging bucket will be created."
+}
+
 variable "cross_zone_load_balancing_enabled" {
   type        = bool
   default     = true
@@ -132,6 +138,12 @@ variable "deregistration_delay" {
   type        = number
   default     = 15
   description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused"
+}
+
+variable "drop_invalid_header_fields" {
+  type        = bool
+  default     = false
+  description = "Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (true) or routed to targets (false)."
 }
 
 variable "health_check_path" {

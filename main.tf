@@ -40,15 +40,9 @@ resource "aws_security_group_rule" "https_ingress" {
 
 module "access_logs" {
   source                             = "cloudposse/lb-s3-bucket/aws"
-  version                            = "0.11.3"
-  enabled                            = module.this.enabled && var.access_logs_enabled
-  name                               = module.this.name
-  namespace                          = module.this.namespace
-  stage                              = module.this.stage
-  environment                        = module.this.environment
+  version                            = "0.13.0"
+  enabled                            = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
   attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
-  delimiter                          = module.this.delimiter
-  tags                               = module.this.tags
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
@@ -57,9 +51,12 @@ module "access_logs" {
   noncurrent_version_transition_days = var.noncurrent_version_transition_days
   standard_transition_days           = var.standard_transition_days
   force_destroy                      = var.alb_access_logs_s3_bucket_force_destroy
+  context                            = module.this.context
 }
 
 resource "aws_lb" "default" {
+  #bridgecrew:skip=BC_AWS_NETWORKING_41 - Skipping Ensure that ALB Drops HTTP Headers
+  #bridgecrew:skip=BC_AWS_LOGGING_22 - Skipping Ensure ELBv2 has Access Logging Enabled
   count              = module.this.enabled ? 1 : 0
   name               = module.this.id
   tags               = module.this.tags
@@ -76,9 +73,10 @@ resource "aws_lb" "default" {
   idle_timeout                     = var.idle_timeout
   ip_address_type                  = var.ip_address_type
   enable_deletion_protection       = var.deletion_protection_enabled
+  drop_invalid_header_fields       = var.drop_invalid_header_fields
 
   access_logs {
-    bucket  = module.access_logs.bucket_id
+    bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }
@@ -131,6 +129,8 @@ resource "aws_lb_target_group" "default" {
 }
 
 resource "aws_lb_listener" "http_forward" {
+  #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
+  #bridgecrew:skip=BC_AWS_NETWORKING_29 - Skipping Ensure ALB Protocol is HTTPS
   count             = var.http_enabled && var.http_redirect != true ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
@@ -170,6 +170,7 @@ resource "aws_lb_listener" "http_redirect" {
 }
 
 resource "aws_lb_listener" "https" {
+  #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
   count             = module.this.enabled && var.https_enabled ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
 
