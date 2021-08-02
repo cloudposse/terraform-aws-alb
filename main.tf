@@ -65,7 +65,7 @@ resource "aws_lb" "default" {
   #bridgecrew:skip=BC_AWS_NETWORKING_41 - Skipping Ensure that ALB Drops HTTP Headers
   #bridgecrew:skip=BC_AWS_LOGGING_22 - Skipping Ensure ELBv2 has Access Logging Enabled
   count              = module.this.enabled ? 1 : 0
-  name               = var.load_balancer_name == "" ? module.default_load_balancer_label.id : substr(var.lb_name, 0, var.load_balancer_name_max_length)
+  name               = var.load_balancer_name == "" ? module.default_load_balancer_label.id : substr(var.load_balancer_name, 0, var.load_balancer_name_max_length)
   tags               = module.this.tags
   internal           = var.internal
   load_balancer_type = "application"
