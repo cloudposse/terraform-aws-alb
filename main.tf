@@ -57,7 +57,6 @@ module "access_logs" {
 module "default_load_balancer_label" {
   source          = "cloudposse/label/null"
   version         = "0.24.1"
-  attributes      = concat(module.this.attributes, ["default"])
   id_length_limit = var.load_balancer_name_max_length
   context         = module.this.context
 }
