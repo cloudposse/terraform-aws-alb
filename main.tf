@@ -131,7 +131,7 @@ resource "aws_lb_target_group" "default" {
 resource "aws_lb_listener" "http_forward" {
   #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
   #bridgecrew:skip=BC_AWS_NETWORKING_29 - Skipping Ensure ALB Protocol is HTTPS
-  count             = var.http_enabled && var.http_redirect != true ? 1 : 0
+  count             = module.this.enabled && var.http_enabled && var.http_redirect != true ? 1 : 0
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
