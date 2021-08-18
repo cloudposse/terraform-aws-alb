@@ -54,11 +54,18 @@ module "access_logs" {
   context                            = module.this.context
 }
 
+module "default_load_balancer_label" {
+  source          = "cloudposse/label/null"
+  version         = "0.24.1"
+  id_length_limit = var.load_balancer_name_max_length
+  context         = module.this.context
+}
+
 resource "aws_lb" "default" {
   #bridgecrew:skip=BC_AWS_NETWORKING_41 - Skipping Ensure that ALB Drops HTTP Headers
   #bridgecrew:skip=BC_AWS_LOGGING_22 - Skipping Ensure ELBv2 has Access Logging Enabled
   count              = module.this.enabled ? 1 : 0
-  name               = module.this.id
+  name               = var.load_balancer_name == "" ? module.default_load_balancer_label.id : substr(var.load_balancer_name, 0, var.load_balancer_name_max_length)
   tags               = module.this.tags
   internal           = var.internal
   load_balancer_type = "application"
@@ -83,15 +90,16 @@ resource "aws_lb" "default" {
 }
 
 module "default_target_group_label" {
-  source     = "cloudposse/label/null"
-  version    = "0.24.1"
-  attributes = concat(module.this.attributes, ["default"])
-  context    = module.this.context
+  source          = "cloudposse/label/null"
+  version         = "0.24.1"
+  attributes      = concat(module.this.attributes, ["default"])
+  id_length_limit = var.target_group_name_max_length
+  context         = module.this.context
 }
 
 resource "aws_lb_target_group" "default" {
   count                = module.this.enabled && var.listener_http_fixed_response == null && var.listener_https_fixed_response == null ? 1 : 0
-  name                 = var.target_group_name == "" ? module.default_target_group_label.id : var.target_group_name
+  name                 = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
   port                 = var.target_group_port
   protocol             = var.target_group_protocol
   vpc_id               = var.vpc_id
