@@ -18,9 +18,9 @@
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_access_logs"></a> [access\_logs](#module\_access\_logs) | cloudposse/lb-s3-bucket/aws | 0.14.0 |
-| <a name="module_default_load_balancer_label"></a> [default\_load\_balancer\_label](#module\_default\_load\_balancer\_label) | cloudposse/label/null | 0.24.1 |
-| <a name="module_default_target_group_label"></a> [default\_target\_group\_label](#module\_default\_target\_group\_label) | cloudposse/label/null | 0.24.1 |
+| <a name="module_access_logs"></a> [access\_logs](#module\_access\_logs) | cloudposse/lb-s3-bucket/aws | 0.14.1 |
+| <a name="module_default_load_balancer_label"></a> [default\_load\_balancer\_label](#module\_default\_load\_balancer\_label) | cloudposse/label/null | 0.25.0 |
+| <a name="module_default_target_group_label"></a> [default\_target\_group\_label](#module\_default\_target\_group\_label) | cloudposse/label/null | 0.25.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.24.1 |
 
 ## Resources
