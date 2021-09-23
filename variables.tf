@@ -142,7 +142,7 @@ variable "deregistration_delay" {
 
 variable "slow_start" {
   type        = number
-  default     = 0
+  default     = null
   description = "The amount of time (30-900 seconds) until a healthy target receives its full share of requests from the load balancer. 0 to disable."
 }
 
