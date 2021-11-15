@@ -146,6 +146,12 @@ variable "drop_invalid_header_fields" {
   description = "Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (true) or routed to targets (false)."
 }
 
+variable "load_balancing_algorithm_type" {
+  type        = string
+  default     = "round_robin"
+  description = "Determines how the load balancer selects targets when routing requests"
+}
+
 variable "health_check_path" {
   type        = string
   default     = "/"

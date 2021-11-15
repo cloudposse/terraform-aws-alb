@@ -98,13 +98,14 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  count                = module.this.enabled && var.listener_http_fixed_response == null && var.listener_https_fixed_response == null ? 1 : 0
-  name                 = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
-  port                 = var.target_group_port
-  protocol             = var.target_group_protocol
-  vpc_id               = var.vpc_id
-  target_type          = var.target_group_target_type
-  deregistration_delay = var.deregistration_delay
+  count                         = module.this.enabled && var.listener_http_fixed_response == null && var.listener_https_fixed_response == null ? 1 : 0
+  name                          = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
+  port                          = var.target_group_port
+  protocol                      = var.target_group_protocol
+  vpc_id                        = var.vpc_id
+  target_type                   = var.target_group_target_type
+  deregistration_delay          = var.deregistration_delay
+  load_balancing_algorithm_type = var.load_balancing_algorithm_type
 
   health_check {
     protocol            = var.target_group_protocol
