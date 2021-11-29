@@ -188,12 +188,6 @@ variable "health_check_matcher" {
   description = "The HTTP response codes to indicate a healthy check"
 }
 
-variable "alb_access_logs_s3_bucket_force_destroy" {
-  type        = bool
-  default     = false
-  description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
-}
-
 variable "target_group_port" {
   type        = number
   default     = 80
@@ -248,48 +242,6 @@ variable "listener_https_fixed_response" {
     status_code  = string
   })
   default = null
-}
-
-variable "lifecycle_rule_enabled" {
-  type        = bool
-  description = "A boolean that indicates whether the s3 log bucket lifecycle rule should be enabled."
-  default     = false
-}
-
-variable "enable_glacier_transition" {
-  type        = bool
-  description = "Enables the transition of lb logs to AWS Glacier"
-  default     = true
-}
-
-variable "glacier_transition_days" {
-  type        = number
-  description = "Number of days after which to move s3 logs to the glacier storage tier"
-  default     = 60
-}
-
-variable "expiration_days" {
-  type        = number
-  description = "Number of days after which to expunge s3 logs"
-  default     = 90
-}
-
-variable "noncurrent_version_expiration_days" {
-  type        = number
-  description = "Specifies when noncurrent s3 log versions expire"
-  default     = 90
-}
-
-variable "noncurrent_version_transition_days" {
-  type        = number
-  description = "Specifies when noncurrent s3 log versions transition"
-  default     = 30
-}
-
-variable "standard_transition_days" {
-  type        = number
-  description = "Number of days to persist logs in standard storage tier before moving to the infrequent access tier"
-  default     = 30
 }
 
 variable "stickiness" {
