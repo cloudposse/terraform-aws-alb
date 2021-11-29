@@ -67,7 +67,7 @@ resource "aws_lb" "default" {
   drop_invalid_header_fields       = var.drop_invalid_header_fields
 
   access_logs {
-    bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
+    bucket  = var.access_logs_s3_bucket_id
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }

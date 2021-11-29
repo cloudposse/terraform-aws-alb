@@ -54,8 +54,3 @@ output "listener_arns" {
     concat(aws_lb_listener.http_forward.*.arn, aws_lb_listener.http_redirect.*.arn, aws_lb_listener.https.*.arn)
   )
 }
-
-output "access_logs_bucket_id" {
-  description = "The S3 bucket ID for access logs"
-  value       = module.access_logs.bucket_id
-}
