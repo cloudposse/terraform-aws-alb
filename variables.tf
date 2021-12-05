@@ -324,3 +324,9 @@ variable "load_balancer_name_max_length" {
   default     = 32
   description = "The max length of characters for the load balancer."
 }
+
+variable "default_target_group_enabled" {
+  type        = bool
+  description = "A boolean that indicates whether the default target group should be enabled."
+  default     = true
+}
