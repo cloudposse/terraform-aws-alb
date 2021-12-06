@@ -327,6 +327,6 @@ variable "load_balancer_name_max_length" {
 
 variable "default_target_group_enabled" {
   type        = bool
-  description = "A boolean that indicates whether the default target group should be enabled."
+  description = "Whether the default target group should be created or not."
   default     = true
 }
