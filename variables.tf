@@ -140,6 +140,12 @@ variable "deregistration_delay" {
   description = "The amount of time to wait in seconds before changing the state of a deregistering target to unused"
 }
 
+variable "slow_start" {
+  type        = number
+  default     = null
+  description = "The amount of time (30-900 seconds) until a healthy target receives its full share of requests from the load balancer. 0 to disable."
+}
+
 variable "drop_invalid_header_fields" {
   type        = bool
   default     = false
