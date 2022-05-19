@@ -108,7 +108,7 @@ resource "aws_lb_target_group" "default" {
   slow_start           = var.slow_start
 
   health_check {
-    protocol            = var.target_group_protocol
+    protocol            = var.health_check_protocol != null ? var.health_check_protocol : var.target_group_protocol
     path                = var.health_check_path
     port                = var.health_check_port
     timeout             = var.health_check_timeout
