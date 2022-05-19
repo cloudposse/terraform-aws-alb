@@ -164,6 +164,12 @@ variable "health_check_port" {
   description = "The port to use for the healthcheck"
 }
 
+variable "health_check_protocol" {
+  type        = string
+  default     = null
+  description = "The protocol to use for the healthcheck. If not specified, same as the traffic protocol"
+}
+
 variable "health_check_timeout" {
   type        = number
   default     = 10
