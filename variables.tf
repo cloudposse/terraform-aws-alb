@@ -218,6 +218,12 @@ variable "target_group_protocol" {
   description = "The protocol for the default target group HTTP or HTTPS"
 }
 
+variable "target_group_protocol_version" {
+  type        = string
+  default     = "HTTP1"
+  description = "The protocol version for the default target group HTTP1 or HTTP2 or GRPC"
+}
+
 variable "target_group_name" {
   type        = string
   default     = ""
