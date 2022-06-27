@@ -20,6 +20,8 @@ access_logs_enabled = true
 
 alb_access_logs_s3_bucket_force_destroy = true
 
+alb_access_logs_s3_bucket_force_destroy_enabled = true
+
 cross_zone_load_balancing_enabled = false
 
 http2_enabled = true

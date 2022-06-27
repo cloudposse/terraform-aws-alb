@@ -206,6 +206,20 @@ variable "alb_access_logs_s3_bucket_force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
 }
 
+variable "alb_access_logs_s3_bucket_force_destroy_enabled" {
+  type        = bool
+  default     = false
+  description = <<-EOT
+    When `true`, permits `force_destroy` to be set to `true`.
+    This is an extra safety precaution to reduce the chance that Terraform will destroy and recreate
+    your S3 bucket, causing COMPLETE LOSS OF ALL DATA even if it was stored in Glacier.
+    WARNING: Upgrading this module from a version prior to 0.27.0 to this version
+      will cause Terraform to delete your existing S3 bucket CAUSING COMPLETE DATA LOSS
+      unless you follow the upgrade instructions on the Wiki [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.27.0-(POTENTIAL-DATA-LOSS)).
+      See additional instructions for upgrading from v0.27.0 to v0.28.0 [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.28.0-and-AWS-provider-v4-(POTENTIAL-DATA-LOSS)).
+    EOT
+}
+
 variable "target_group_port" {
   type        = number
   default     = 80
@@ -268,46 +282,28 @@ variable "listener_https_fixed_response" {
   default = null
 }
 
-variable "lifecycle_rule_enabled" {
-  type        = bool
-  description = "A boolean that indicates whether the s3 log bucket lifecycle rule should be enabled."
-  default     = false
-}
+variable "lifecycle_configuration_rules" {
+  type = list(object({
+    enabled = bool
+    id      = string
 
-variable "enable_glacier_transition" {
-  type        = bool
-  description = "Enables the transition of lb logs to AWS Glacier"
-  default     = true
-}
+    abort_incomplete_multipart_upload_days = number
 
-variable "glacier_transition_days" {
-  type        = number
-  description = "Number of days after which to move s3 logs to the glacier storage tier"
-  default     = 60
-}
+    # `filter_and` is the `and` configuration block inside the `filter` configuration.
+    # This is the only place you should specify a prefix.
+    filter_and = any
+    expiration = any
+    transition = list(any)
 
-variable "expiration_days" {
-  type        = number
-  description = "Number of days after which to expunge s3 logs"
-  default     = 90
-}
-
-variable "noncurrent_version_expiration_days" {
-  type        = number
-  description = "Specifies when noncurrent s3 log versions expire"
-  default     = 90
-}
-
-variable "noncurrent_version_transition_days" {
-  type        = number
-  description = "Specifies when noncurrent s3 log versions transition"
-  default     = 30
-}
-
-variable "standard_transition_days" {
-  type        = number
-  description = "Number of days to persist logs in standard storage tier before moving to the infrequent access tier"
-  default     = 30
+    noncurrent_version_expiration = any
+    noncurrent_version_transition = list(any)
+  }))
+  default     = []
+  description = <<-EOT
+    A list of S3 bucket v2 lifecycle rules, as specified in [terraform-aws-s3-bucket](https://github.com/cloudposse/terraform-aws-s3-bucket)"
+    These rules are not affected by the deprecated `lifecycle_rule_enabled` flag.
+    **NOTE:** Unless you also set `lifecycle_rule_enabled = false` you will also get the default deprecated rules set on your bucket.
+    EOT
 }
 
 variable "stickiness" {
