@@ -98,6 +98,19 @@ variable "alb_access_logs_s3_bucket_force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
 }
 
+variable "alb_access_logs_s3_bucket_force_destroy_enabled" {
+  type        = bool
+  description = <<-EOT
+    When `true`, permits `force_destroy` to be set to `true`.
+    This is an extra safety precaution to reduce the chance that Terraform will destroy and recreate
+    your S3 bucket, causing COMPLETE LOSS OF ALL DATA even if it was stored in Glacier.
+    WARNING: Upgrading this module from a version prior to 0.27.0 to this version
+      will cause Terraform to delete your existing S3 bucket CAUSING COMPLETE DATA LOSS
+      unless you follow the upgrade instructions on the Wiki [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.27.0-(POTENTIAL-DATA-LOSS)).
+      See additional instructions for upgrading from v0.27.0 to v0.28.0 [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.28.0-and-AWS-provider-v4-(POTENTIAL-DATA-LOSS)).
+    EOT
+}
+
 variable "target_group_port" {
   type        = number
   description = "The port for the default target group"
