@@ -98,71 +98,87 @@ For a complete example, see [examples/complete](examples/complete).
 For automated test of the complete example using `bats` and `Terratest`, see [test](test).
 
 ```hcl
-  provider "aws" {
-    region = var.region
-  }
+provider "aws" {
+  region = var.region
+}
 
-  module "vpc" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.1"
-    namespace  = var.namespace
-    stage      = var.stage
-    name       = var.name
-    delimiter  = var.delimiter
-    attributes = var.attributes
-    cidr_block = var.vpc_cidr_block
-    tags       = var.tags
-  }
+module "vpc" {
+  source  = "cloudposse/vpc/aws"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
 
-  module "subnets" {
-    source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.1"
-    availability_zones   = var.availability_zones
-    namespace            = var.namespace
-    stage                = var.stage
-    name                 = var.name
-    attributes           = var.attributes
-    delimiter            = var.delimiter
-    vpc_id               = module.vpc.vpc_id
-    igw_id               = module.vpc.igw_id
-    cidr_block           = module.vpc.vpc_cidr_block
-    nat_gateway_enabled  = false
-    nat_instance_enabled = false
-    tags                 = var.tags
-  }
+  namespace  = var.namespace
+  stage      = var.stage
+  name       = var.name
+  delimiter  = var.delimiter
+  attributes = var.attributes
 
-  module "alb" {
-    source = "cloudposse/alb/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version     = "x.x.x"
-    namespace                               = var.namespace
-    stage                                   = var.stage
-    name                                    = var.name
-    attributes                              = var.attributes
-    delimiter                               = var.delimiter
-    vpc_id                                  = module.vpc.vpc_id
-    security_group_ids                      = [module.vpc.vpc_default_security_group_id]
-    subnet_ids                              = module.subnets.public_subnet_ids
-    internal                                = var.internal
-    http_enabled                            = var.http_enabled
-    http_redirect                           = var.http_redirect
-    access_logs_enabled                     = var.access_logs_enabled
-    alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
-    cross_zone_load_balancing_enabled       = var.cross_zone_load_balancing_enabled
-    http2_enabled                           = var.http2_enabled
-    idle_timeout                            = var.idle_timeout
-    ip_address_type                         = var.ip_address_type
-    deletion_protection_enabled             = var.deletion_protection_enabled
-    deregistration_delay                    = var.deregistration_delay
-    health_check_path                       = var.health_check_path
-    health_check_timeout                    = var.health_check_timeout
-    health_check_healthy_threshold          = var.health_check_healthy_threshold
-    health_check_unhealthy_threshold        = var.health_check_unhealthy_threshold
-    health_check_interval                   = var.health_check_interval
-    health_check_matcher                    = var.health_check_matcher
-    target_group_port                       = var.target_group_port
-    target_group_target_type                = var.target_group_target_type
-    stickiness                              = var.stickiness
-    tags                                    = var.tags
-  }
+  ipv4_primary_cidr_block = "10.0.0.0/16"
+  assign_generated_ipv6_cidr_block = true
+
+  tags = var.tags
+}
+
+module "subnets" {
+  source  = "cloudposse/dynamic-subnets/aws"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
+
+  namespace  = var.namespace
+  stage      = var.stage
+  name       = var.name
+  attributes = var.attributes
+  delimiter  = var.delimiter
+
+  availability_zones   = var.availability_zones
+  vpc_id               = module.vpc.vpc_id
+  igw_id               = module.vpc.igw_id
+  cidr_block           = module.vpc.vpc_cidr_block
+  nat_gateway_enabled  = false
+  nat_instance_enabled = false
+
+  tags = var.tags
+}
+
+module "alb" {
+  source = "cloudposse/alb/aws"
+  # Cloud Posse recommends pinning every module to a specific version
+  # version = "x.x.x"
+
+  namespace  = var.namespace
+  stage      = var.stage
+  name       = var.name
+  attributes = var.attributes
+  delimiter  = var.delimiter
+
+  vpc_id                                  = module.vpc.vpc_id
+  security_group_ids                      = [module.vpc.vpc_default_security_group_id]
+  subnet_ids                              = module.subnets.public_subnet_ids
+  internal                                = var.internal
+  http_enabled                            = var.http_enabled
+  http_redirect                           = var.http_redirect
+  access_logs_enabled                     = var.access_logs_enabled
+  cross_zone_load_balancing_enabled       = var.cross_zone_load_balancing_enabled
+  http2_enabled                           = var.http2_enabled
+  idle_timeout                            = var.idle_timeout
+  ip_address_type                         = var.ip_address_type
+  deletion_protection_enabled             = var.deletion_protection_enabled
+  deregistration_delay                    = var.deregistration_delay
+  health_check_path                       = var.health_check_path
+  health_check_timeout                    = var.health_check_timeout
+  health_check_healthy_threshold          = var.health_check_healthy_threshold
+  health_check_unhealthy_threshold        = var.health_check_unhealthy_threshold
+  health_check_interval                   = var.health_check_interval
+  health_check_matcher                    = var.health_check_matcher
+  target_group_port                       = var.target_group_port
+  target_group_target_type                = var.target_group_target_type
+  stickiness                              = var.stickiness
+
+  alb_access_logs_s3_bucket_force_destroy         = var.alb_access_logs_s3_bucket_force_destroy
+  alb_access_logs_s3_bucket_force_destroy_enabled = var.alb_access_logs_s3_bucket_force_destroy_enabled
+
+  tags = var.tags
+}
 ```
 
 
@@ -313,6 +329,7 @@ Available targets:
 | <a name="output_alb_name"></a> [alb\_name](#output\_alb\_name) | The ARN suffix of the ALB |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | The ID of the zone which ALB is provisioned |
 | <a name="output_default_target_group_arn"></a> [default\_target\_group\_arn](#output\_default\_target\_group\_arn) | The default target group ARN |
+| <a name="output_default_target_group_arn_suffix"></a> [default\_target\_group\_arn\_suffix](#output\_default\_target\_group\_arn\_suffix) | The default target group ARN suffix |
 | <a name="output_http_listener_arn"></a> [http\_listener\_arn](#output\_http\_listener\_arn) | The ARN of the HTTP forwarding listener |
 | <a name="output_http_redirect_listener_arn"></a> [http\_redirect\_listener\_arn](#output\_http\_redirect\_listener\_arn) | The ARN of the HTTP to HTTPS redirect listener |
 | <a name="output_https_listener_arn"></a> [https\_listener\_arn](#output\_https\_listener\_arn) | The ARN of the HTTPS listener |
@@ -465,8 +482,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 ### Contributors
 
 <!-- markdownlint-disable -->
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Sarkis Varozian][sarkis_avatar]][sarkis_homepage]<br/>[Sarkis Varozian][sarkis_homepage] | [![Adam Crews][adamcrews_avatar]][adamcrews_homepage]<br/>[Adam Crews][adamcrews_homepage] |
-|---|---|---|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Sarkis Varozian][sarkis_avatar]][sarkis_homepage]<br/>[Sarkis Varozian][sarkis_homepage] | [![Adam Crews][adamcrews_avatar]][adamcrews_homepage]<br/>[Adam Crews][adamcrews_homepage] | [![RB][nitrocode_avatar]][nitrocode_homepage]<br/>[RB][nitrocode_homepage] |
+|---|---|---|---|---|---|
 <!-- markdownlint-restore -->
 
   [osterman_homepage]: https://github.com/osterman
@@ -479,6 +496,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [sarkis_avatar]: https://img.cloudposse.com/150x150/https://github.com/sarkis.png
   [adamcrews_homepage]: https://github.com/adamcrews
   [adamcrews_avatar]: https://img.cloudposse.com/150x150/https://github.com/adamcrews.png
+  [nitrocode_homepage]: https://github.com/nitrocode
+  [nitrocode_avatar]: https://img.cloudposse.com/150x150/https://github.com/nitrocode.png
 
 [![README Footer][readme_footer_img]][readme_footer_link]
 [![Beacon][beacon]][website]
