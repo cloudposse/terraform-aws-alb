@@ -33,6 +33,11 @@ output "default_target_group_arn" {
   value       = join("", aws_lb_target_group.default.*.arn)
 }
 
+output "default_target_group_arn_suffix" {
+  description = "The default target group ARN suffix"
+  value       = join("", aws_lb_target_group.default.*.arn_suffix)
+}
+
 output "http_listener_arn" {
   description = "The ARN of the HTTP forwarding listener"
   value       = join("", aws_lb_listener.http_forward.*.arn)

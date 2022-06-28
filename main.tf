@@ -39,10 +39,18 @@ resource "aws_security_group_rule" "https_ingress" {
 }
 
 module "access_logs" {
-  source                             = "cloudposse/lb-s3-bucket/aws"
-  version                            = "0.14.1"
-  enabled                            = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
-  attributes                         = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
+  source  = "cloudposse/lb-s3-bucket/aws"
+  version = "0.16.0"
+
+  enabled = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
+
+  attributes = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
+
+  force_destroy                 = var.alb_access_logs_s3_bucket_force_destroy
+  force_destroy_enabled         = var.alb_access_logs_s3_bucket_force_destroy_enabled
+  lifecycle_configuration_rules = var.lifecycle_configuration_rules
+
+  # TODO: deprecate these inputs in favor of `lifecycle_configuration_rules`
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
@@ -50,8 +58,8 @@ module "access_logs" {
   noncurrent_version_expiration_days = var.noncurrent_version_expiration_days
   noncurrent_version_transition_days = var.noncurrent_version_transition_days
   standard_transition_days           = var.standard_transition_days
-  force_destroy                      = var.alb_access_logs_s3_bucket_force_destroy
-  context                            = module.this.context
+
+  context = module.this.context
 }
 
 module "default_load_balancer_label" {
@@ -98,17 +106,20 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  count                         = module.this.enabled && var.default_target_group_enabled ? 1 : 0
+  count = module.this.enabled && var.default_target_group_enabled ? 1 : 0
+
   name                          = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
   port                          = var.target_group_port
   protocol                      = var.target_group_protocol
+  protocol_version              = var.target_group_protocol_version
   vpc_id                        = var.vpc_id
   target_type                   = var.target_group_target_type
   deregistration_delay          = var.deregistration_delay
+  slow_start                    = var.slow_start
   load_balancing_algorithm_type = var.load_balancing_algorithm_type
 
   health_check {
-    protocol            = var.target_group_protocol
+    protocol            = var.health_check_protocol != null ? var.health_check_protocol : var.target_group_protocol
     path                = var.health_check_path
     port                = var.health_check_port
     timeout             = var.health_check_timeout
