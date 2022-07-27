@@ -101,7 +101,7 @@ variable "access_logs_enabled" {
 variable "allow_ssl_requests_only" {
   type        = bool
   default     = false
-  description = "Require requests to use Secure Socket Layer (HTTPS/SSL)."
+  description = "Set to true to require requests to use Secure Socket Layer (HTTPS/SSL) on the external S3 Bucket storing access logs."
 }
 
 variable "access_logs_s3_bucket_id" {
