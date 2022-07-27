@@ -98,6 +98,12 @@ variable "access_logs_enabled" {
   description = "A boolean flag to enable/disable access_logs"
 }
 
+variable "allow_ssl_requests_only" {
+  type        = bool
+  default     = false
+  description = "Require requests to use Secure Socket Layer (HTTPS/SSL)."
+}
+
 variable "access_logs_s3_bucket_id" {
   type        = string
   default     = null
