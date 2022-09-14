@@ -153,6 +153,7 @@ resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
+  tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = var.listener_http_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
@@ -174,6 +175,7 @@ resource "aws_lb_listener" "http_redirect" {
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
+  tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = join("", aws_lb_target_group.default.*.arn)
@@ -196,6 +198,7 @@ resource "aws_lb_listener" "https" {
   protocol        = "HTTPS"
   ssl_policy      = var.https_ssl_policy
   certificate_arn = var.certificate_arn
+  tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = var.listener_https_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
