@@ -346,7 +346,7 @@ variable "default_target_group_enabled" {
 }
 
 variable "listener_additional_tags" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "The additional tags to apply to all listeners"
 }
