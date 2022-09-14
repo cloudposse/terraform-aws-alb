@@ -344,3 +344,9 @@ variable "default_target_group_enabled" {
   description = "Whether the default target group should be created or not."
   default     = true
 }
+
+variable "listener_additional_tags" {
+  type        = map(string)
+  default     = {}
+  description = "The additional tags to apply to all listeners"
+}
