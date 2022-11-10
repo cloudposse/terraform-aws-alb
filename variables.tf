@@ -354,5 +354,5 @@ variable "listener_additional_tags" {
 variable "preserve_host_header" {
   type        = bool
   default     = false
-  description = " Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
+  description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
 }
