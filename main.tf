@@ -27,6 +27,16 @@ resource "aws_security_group_rule" "http_ingress" {
   security_group_id = join("", aws_security_group.default.*.id)
 }
 
+resource "aws_security_group_rule" "http_ingress_from_sg" {
+  for_each                 = module.this.enabled && var.security_group_enabled && var.http_enabled ? toset(var.http_ingress_source_security_group_ids) : []
+  type                     = "ingress"
+  from_port                = var.http_port
+  to_port                  = var.http_port
+  protocol                 = "tcp"
+  source_security_group_id = each.key
+  security_group_id        = join("", aws_security_group.default.*.id)
+}
+
 resource "aws_security_group_rule" "https_ingress" {
   count             = module.this.enabled && var.security_group_enabled && var.https_enabled ? 1 : 0
   type              = "ingress"
@@ -36,6 +46,16 @@ resource "aws_security_group_rule" "https_ingress" {
   cidr_blocks       = var.https_ingress_cidr_blocks
   prefix_list_ids   = var.https_ingress_prefix_list_ids
   security_group_id = join("", aws_security_group.default.*.id)
+}
+
+resource "aws_security_group_rule" "https_ingress_from_sg" {
+  for_each                 = module.this.enabled && var.security_group_enabled && var.https_enabled ? toset(var.https_ingress_source_security_group_ids) : []
+  type                     = "ingress"
+  from_port                = var.https_port
+  to_port                  = var.https_port
+  protocol                 = "tcp"
+  source_security_group_id = each.key
+  security_group_id        = join("", aws_security_group.default.*.id)
 }
 
 module "access_logs" {
