@@ -50,6 +50,12 @@ variable "http_ingress_prefix_list_ids" {
   description = "List of prefix list IDs for allowing access to HTTP ingress security group"
 }
 
+variable "http_ingress_source_security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "Security group IDs to allow access to HTTP ingress security group"
+}
+
 variable "certificate_arn" {
   type        = string
   default     = ""
@@ -78,6 +84,12 @@ variable "https_ingress_prefix_list_ids" {
   type        = list(string)
   default     = []
   description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
+}
+
+variable "https_ingress_source_security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "Security group IDs to allow access to HTTPS ingress security group"
 }
 
 variable "https_ssl_policy" {
