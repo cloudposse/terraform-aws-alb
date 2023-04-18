@@ -345,8 +345,26 @@ variable "load_balancer_name_max_length" {
   description = "The max length of characters for the load balancer."
 }
 
+variable "load_balancing_algorithm_type" {
+  type        = string
+  default     = "round_robin"
+  description = "Determines how the load balancer selects targets when routing requests. Only applicable for Application Load Balancer Target Groups"
+}
+
 variable "default_target_group_enabled" {
   type        = bool
   description = "Whether the default target group should be created or not."
   default     = true
+}
+
+variable "listener_additional_tags" {
+  type        = map(string)
+  default     = {}
+  description = "The additional tags to apply to all listeners"
+}
+
+variable "preserve_host_header" {
+  type        = bool
+  default     = false
+  description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
 }

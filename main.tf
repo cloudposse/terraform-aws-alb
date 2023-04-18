@@ -90,6 +90,7 @@ resource "aws_lb" "default" {
   ip_address_type                  = var.ip_address_type
   enable_deletion_protection       = var.deletion_protection_enabled
   drop_invalid_header_fields       = var.drop_invalid_header_fields
+  preserve_host_header             = var.preserve_host_header
 
   access_logs {
     bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
@@ -107,15 +108,16 @@ module "default_target_group_label" {
 }
 
 resource "aws_lb_target_group" "default" {
-  count                = module.this.enabled && var.default_target_group_enabled ? 1 : 0
-  name                 = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
-  port                 = var.target_group_port
-  protocol             = var.target_group_protocol
-  protocol_version     = var.target_group_protocol_version
-  vpc_id               = var.vpc_id
-  target_type          = var.target_group_target_type
-  deregistration_delay = var.deregistration_delay
-  slow_start           = var.slow_start
+  count                         = module.this.enabled && var.default_target_group_enabled ? 1 : 0
+  name                          = var.target_group_name == "" ? module.default_target_group_label.id : substr(var.target_group_name, 0, var.target_group_name_max_length)
+  port                          = var.target_group_port
+  protocol                      = var.target_group_protocol
+  protocol_version              = var.target_group_protocol_version
+  vpc_id                        = var.vpc_id
+  target_type                   = var.target_group_target_type
+  load_balancing_algorithm_type = var.load_balancing_algorithm_type
+  deregistration_delay          = var.deregistration_delay
+  slow_start                    = var.slow_start
 
   health_check {
     protocol            = var.health_check_protocol != null ? var.health_check_protocol : var.target_group_protocol
@@ -154,6 +156,7 @@ resource "aws_lb_listener" "http_forward" {
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
+  tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = var.listener_http_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
@@ -175,6 +178,7 @@ resource "aws_lb_listener" "http_redirect" {
   load_balancer_arn = join("", aws_lb.default.*.arn)
   port              = var.http_port
   protocol          = "HTTP"
+  tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = join("", aws_lb_target_group.default.*.arn)
@@ -197,6 +201,7 @@ resource "aws_lb_listener" "https" {
   protocol        = "HTTPS"
   ssl_policy      = var.https_ssl_policy
   certificate_arn = var.certificate_arn
+  tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
     target_group_arn = var.listener_https_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
