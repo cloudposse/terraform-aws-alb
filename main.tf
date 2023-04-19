@@ -38,29 +38,6 @@ resource "aws_security_group_rule" "https_ingress" {
   security_group_id = join("", aws_security_group.default.*.id)
 }
 
-module "access_logs" {
-  source  = "cloudposse/lb-s3-bucket/aws"
-  version = "0.16.0"
-
-  enabled = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
-
-  attributes = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
-
-  force_destroy                 = var.alb_access_logs_s3_bucket_force_destroy
-  force_destroy_enabled         = var.alb_access_logs_s3_bucket_force_destroy_enabled
-  lifecycle_configuration_rules = var.lifecycle_configuration_rules
-
-  # TODO: deprecate these inputs in favor of `lifecycle_configuration_rules`
-  lifecycle_rule_enabled             = var.lifecycle_rule_enabled
-  enable_glacier_transition          = var.enable_glacier_transition
-  expiration_days                    = var.expiration_days
-  glacier_transition_days            = var.glacier_transition_days
-  noncurrent_version_expiration_days = var.noncurrent_version_expiration_days
-  noncurrent_version_transition_days = var.noncurrent_version_transition_days
-  standard_transition_days           = var.standard_transition_days
-
-  context = module.this.context
-}
 
 module "default_load_balancer_label" {
   source          = "cloudposse/label/null"
@@ -92,7 +69,7 @@ resource "aws_lb" "default" {
   preserve_host_header             = var.preserve_host_header
 
   access_logs {
-    bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
+    bucket  = var.access_logs_s3_bucket_id
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }
