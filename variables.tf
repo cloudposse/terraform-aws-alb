@@ -200,6 +200,12 @@ variable "health_check_matcher" {
   description = "The HTTP response codes to indicate a healthy check"
 }
 
+variable "ignore_default_action_changes" {
+  description = "Whether to ignore changes for Load balancer default action (useful when using CodeDeploy Blue/Green deployments to avoid drifts)"
+  type        = bool
+  default     = false
+}
+
 variable "alb_access_logs_s3_bucket_force_destroy" {
   type        = bool
   default     = false

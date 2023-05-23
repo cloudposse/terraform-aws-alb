@@ -40,23 +40,23 @@ output "default_target_group_arn_suffix" {
 
 output "http_listener_arn" {
   description = "The ARN of the HTTP forwarding listener"
-  value       = join("", aws_lb_listener.http_forward.*.arn)
+  value       = join("", aws_lb_listener.http_forward.*.arn, aws_lb_listener.http_forward_ignore_default_action.*.arn)
 }
 
 output "http_redirect_listener_arn" {
   description = "The ARN of the HTTP to HTTPS redirect listener"
-  value       = join("", aws_lb_listener.http_redirect.*.arn)
+  value       = join("", aws_lb_listener.http_redirect.*.arn, aws_lb_listener.http_redirect_ignore_default_action.*.arn)
 }
 
 output "https_listener_arn" {
   description = "The ARN of the HTTPS listener"
-  value       = join("", aws_lb_listener.https.*.arn)
+  value       = join("", aws_lb_listener.https.*.arn, aws_lb_listener.https_ignore_default_action.*.arn)
 }
 
 output "listener_arns" {
   description = "A list of all the listener ARNs"
   value = compact(
-    concat(aws_lb_listener.http_forward.*.arn, aws_lb_listener.http_redirect.*.arn, aws_lb_listener.https.*.arn)
+    concat(aws_lb_listener.http_forward.*.arn, aws_lb_listener.http_redirect.*.arn, aws_lb_listener.https.*.arn, aws_lb_listener.http_forward_ignore_default_action.*.arn, aws_lb_listener.http_redirect_ignore_default_action.*.arn, aws_lb_listener.https_ignore_default_action.*.arn)
   )
 }
 
