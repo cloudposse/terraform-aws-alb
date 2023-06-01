@@ -362,3 +362,9 @@ variable "preserve_host_header" {
   default     = false
   description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
 }
+
+variable "xff_header_processing_mode" {
+  type        = string
+  default     = "append"
+  description = "Determines how the load balancer modifies the X-Forwarded-For header in the HTTP request before sending the request to the target. The possible values are append, preserve, and remove. Only valid for Load Balancers of type application. The default is append"
+}
