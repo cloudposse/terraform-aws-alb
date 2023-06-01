@@ -47,7 +47,6 @@ module "alb" {
   stickiness                        = var.stickiness
 
   alb_access_logs_s3_bucket_force_destroy         = var.alb_access_logs_s3_bucket_force_destroy
-  alb_access_logs_s3_bucket_force_destroy_enabled = var.alb_access_logs_s3_bucket_force_destroy_enabled
 
   context = module.this.context
 }
