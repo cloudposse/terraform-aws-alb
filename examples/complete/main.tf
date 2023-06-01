@@ -46,7 +46,7 @@ module "alb" {
   target_group_target_type          = var.target_group_target_type
   stickiness                        = var.stickiness
 
-  alb_access_logs_s3_bucket_force_destroy         = var.alb_access_logs_s3_bucket_force_destroy
+  alb_access_logs_s3_bucket_force_destroy = var.alb_access_logs_s3_bucket_force_destroy
 
   context = module.this.context
 }
