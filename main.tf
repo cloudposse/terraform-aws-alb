@@ -40,7 +40,7 @@ resource "aws_security_group_rule" "https_ingress" {
 
 module "access_logs" {
   source  = "cloudposse/lb-s3-bucket/aws"
-  version = "0.16.0"
+  version = "3.1.1"
 
   enabled = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
 
@@ -49,15 +49,6 @@ module "access_logs" {
   force_destroy                 = var.alb_access_logs_s3_bucket_force_destroy
   force_destroy_enabled         = var.alb_access_logs_s3_bucket_force_destroy_enabled
   lifecycle_configuration_rules = var.lifecycle_configuration_rules
-
-  # TODO: deprecate these inputs in favor of `lifecycle_configuration_rules`
-  lifecycle_rule_enabled             = var.lifecycle_rule_enabled
-  enable_glacier_transition          = var.enable_glacier_transition
-  expiration_days                    = var.expiration_days
-  glacier_transition_days            = var.glacier_transition_days
-  noncurrent_version_expiration_days = var.noncurrent_version_expiration_days
-  noncurrent_version_transition_days = var.noncurrent_version_transition_days
-  standard_transition_days           = var.standard_transition_days
 
   context = module.this.context
 }
