@@ -13,7 +13,7 @@ resource "aws_security_group_rule" "egress" {
   to_port           = "0"
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = one(aws_security_group.default[*].id)
 }
 
 resource "aws_security_group_rule" "http_ingress" {
@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "http_ingress" {
   protocol          = "tcp"
   cidr_blocks       = var.http_ingress_cidr_blocks
   prefix_list_ids   = var.http_ingress_prefix_list_ids
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = one(aws_security_group.default[*].id)
 }
 
 resource "aws_security_group_rule" "https_ingress" {
@@ -35,22 +35,20 @@ resource "aws_security_group_rule" "https_ingress" {
   protocol          = "tcp"
   cidr_blocks       = var.https_ingress_cidr_blocks
   prefix_list_ids   = var.https_ingress_prefix_list_ids
-  security_group_id = join("", aws_security_group.default.*.id)
+  security_group_id = one(aws_security_group.default[*].id)
 }
 
 module "access_logs" {
   source  = "cloudposse/lb-s3-bucket/aws"
-  version = "0.16.0"
+  version = "0.18.0"
 
   enabled = module.this.enabled && var.access_logs_enabled && var.access_logs_s3_bucket_id == null
 
   attributes = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
 
   force_destroy                 = var.alb_access_logs_s3_bucket_force_destroy
-  force_destroy_enabled         = var.alb_access_logs_s3_bucket_force_destroy_enabled
   lifecycle_configuration_rules = var.lifecycle_configuration_rules
 
-  # TODO: deprecate these inputs in favor of `lifecycle_configuration_rules`
   lifecycle_rule_enabled             = var.lifecycle_rule_enabled
   enable_glacier_transition          = var.enable_glacier_transition
   expiration_days                    = var.expiration_days
@@ -79,7 +77,7 @@ resource "aws_lb" "default" {
   load_balancer_type = "application"
 
   security_groups = compact(
-    concat(var.security_group_ids, [join("", aws_security_group.default.*.id)]),
+    concat(var.security_group_ids, [one(aws_security_group.default[*].id)]),
   )
 
   subnets                          = var.subnet_ids
@@ -152,13 +150,13 @@ resource "aws_lb_listener" "http_forward" {
   #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
   #bridgecrew:skip=BC_AWS_NETWORKING_29 - Skipping Ensure ALB Protocol is HTTPS
   count             = module.this.enabled && var.http_enabled && var.http_redirect != true ? 1 : 0
-  load_balancer_arn = join("", aws_lb.default.*.arn)
+  load_balancer_arn = one(aws_lb.default[*].arn)
   port              = var.http_port
   protocol          = "HTTP"
   tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = var.listener_http_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
+    target_group_arn = var.listener_http_fixed_response != null ? null : one(aws_lb_target_group.default[*].arn)
     type             = var.listener_http_fixed_response != null ? "fixed-response" : "forward"
 
     dynamic "fixed_response" {
@@ -174,13 +172,13 @@ resource "aws_lb_listener" "http_forward" {
 
 resource "aws_lb_listener" "http_redirect" {
   count             = module.this.enabled && var.http_enabled && var.http_redirect == true ? 1 : 0
-  load_balancer_arn = join("", aws_lb.default.*.arn)
+  load_balancer_arn = one(aws_lb.default[*].arn)
   port              = var.http_port
   protocol          = "HTTP"
   tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = join("", aws_lb_target_group.default.*.arn)
+    target_group_arn = one(aws_lb_target_group.default[*].arn)
     type             = "redirect"
 
     redirect {
@@ -194,7 +192,7 @@ resource "aws_lb_listener" "http_redirect" {
 resource "aws_lb_listener" "https" {
   #bridgecrew:skip=BC_AWS_GENERAL_43 - Skipping Ensure that load balancer is using TLS 1.2.
   count             = module.this.enabled && var.https_enabled ? 1 : 0
-  load_balancer_arn = join("", aws_lb.default.*.arn)
+  load_balancer_arn = one(aws_lb.default[*].arn)
 
   port            = var.https_port
   protocol        = "HTTPS"
@@ -203,7 +201,7 @@ resource "aws_lb_listener" "https" {
   tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = var.listener_https_fixed_response != null ? null : join("", aws_lb_target_group.default.*.arn)
+    target_group_arn = var.listener_https_fixed_response != null ? null : one(aws_lb_target_group.default[*].arn)
     type             = var.listener_https_fixed_response != null ? "fixed-response" : "forward"
 
     dynamic "fixed_response" {
@@ -218,7 +216,7 @@ resource "aws_lb_listener" "https" {
 }
 
 resource "aws_lb_listener_certificate" "https_sni" {
-  count           = module.this.enabled && var.https_enabled && var.additional_certs != [] ? length(var.additional_certs) : 0
-  listener_arn    = join("", aws_lb_listener.https.*.arn)
+  count           = module.this.enabled && var.https_enabled && length(var.additional_certs) > 0 ? length(var.additional_certs) : 0
+  listener_arn    = one(aws_lb_listener.https[*].arn)
   certificate_arn = var.additional_certs[count.index]
 }
