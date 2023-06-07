@@ -88,6 +88,7 @@ resource "aws_lb" "default" {
   enable_deletion_protection       = var.deletion_protection_enabled
   drop_invalid_header_fields       = var.drop_invalid_header_fields
   preserve_host_header             = var.preserve_host_header
+  xff_header_processing_mode       = var.xff_header_processing_mode
 
   access_logs {
     bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
