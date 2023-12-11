@@ -212,20 +212,6 @@ variable "alb_access_logs_s3_bucket_force_destroy" {
   description = "A boolean that indicates all objects should be deleted from the ALB access logs S3 bucket so that the bucket can be destroyed without error"
 }
 
-variable "alb_access_logs_s3_bucket_force_destroy_enabled" {
-  type        = bool
-  default     = false
-  description = <<-EOT
-    When `true`, permits `force_destroy` to be set to `true`.
-    This is an extra safety precaution to reduce the chance that Terraform will destroy and recreate
-    your S3 bucket, causing COMPLETE LOSS OF ALL DATA even if it was stored in Glacier.
-    WARNING: Upgrading this module from a version prior to 0.27.0 to this version
-      will cause Terraform to delete your existing S3 bucket CAUSING COMPLETE DATA LOSS
-      unless you follow the upgrade instructions on the Wiki [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.27.0-(POTENTIAL-DATA-LOSS)).
-      See additional instructions for upgrading from v0.27.0 to v0.28.0 [here](https://github.com/cloudposse/terraform-aws-s3-log-storage/wiki/Upgrading-to-v0.28.0-and-AWS-provider-v4-(POTENTIAL-DATA-LOSS)).
-    EOT
-}
-
 variable "target_group_port" {
   type        = number
   default     = 80
@@ -367,4 +353,10 @@ variable "preserve_host_header" {
   type        = bool
   default     = false
   description = "Indicates whether the Application Load Balancer should preserve the Host header in the HTTP request and send it to the target without any change."
+}
+
+variable "xff_header_processing_mode" {
+  type        = string
+  default     = "append"
+  description = "Determines how the load balancer modifies the X-Forwarded-For header in the HTTP request before sending the request to the target. The possible values are append, preserve, and remove. Only valid for Load Balancers of type application. The default is append"
 }
