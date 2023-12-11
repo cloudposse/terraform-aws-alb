@@ -46,6 +46,7 @@ module "access_logs" {
 
   attributes = compact(concat(module.this.attributes, ["alb", "access", "logs"]))
 
+  allow_ssl_requests_only       = var.allow_ssl_requests_only
   force_destroy                 = var.alb_access_logs_s3_bucket_force_destroy
   lifecycle_configuration_rules = var.lifecycle_configuration_rules
 
