@@ -180,8 +180,7 @@ resource "aws_lb_listener" "http_redirect" {
   tags              = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = one(aws_lb_target_group.default[*].arn)
-    type             = "redirect"
+    type = "redirect"
 
     redirect {
       port        = "443"
