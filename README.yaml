@@ -3,22 +3,22 @@ license: APACHE2
 github_repo: cloudposse/terraform-aws-alb
 badges:
   - name: Latest Release
-    image: https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-alb.svg?style=for-the-badge
     url: https://github.com/cloudposse/terraform-aws-alb/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-aws-alb.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-alb/commits
   - name: Slack Community
-    image: https://slack.cloudposse.com/badge.svg
+    image: https://slack.cloudposse.com/for-the-badge.svg
     url: https://slack.cloudposse.com
 
+# List any related terraform modules that this module may be used with or that this module depends on.
 related:
   - name: terraform-aws-alb-ingress
-    description:
-      Terraform module to provision an HTTP style ingress rule based on hostname
-      and path for an ALB
+    description: Terraform module to provision an HTTP style ingress rule based on hostname and path for an ALB
     url: https://github.com/cloudposse/terraform-aws-alb-ingress
 
-description:
-  Terraform module to create an ALB, default ALB listener(s), and a default
-  ALB target and related security groups.
+description: Terraform module to create an ALB, default ALB listener(s), and a default ALB target and related security groups.
 
 usage: |-
   For a complete example, see [examples/complete](examples/complete).
@@ -113,16 +113,4 @@ include:
   - docs/targets.md
   - docs/terraform.md
 
-contributors:
-  - name: Erik Osterman
-    github: osterman
-  - name: Igor Rodionov
-    github: goruha
-  - name: Andriy Knysh
-    github: aknysh
-  - name: Sarkis Varozian
-    github: sarkis
-  - name: Adam Crews
-    github: adamcrews
-  - name: RB
-    github: nitrocode
+contributors: []
