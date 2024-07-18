@@ -5,3 +5,4 @@ repository:
   description: Terraform module to provision a standard ALB for HTTP/HTTP traffic
   homepage: https://cloudposse.com/accelerate
   topics: terraform, terraform-module, aws, alb, load-balancer, ecs, ec2, layer7, ingress, tls, acm, http, https, elb, hcl2
+
