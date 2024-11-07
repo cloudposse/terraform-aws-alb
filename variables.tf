@@ -286,6 +286,11 @@ variable "listener_https_redirect" {
     status_code = string
   })
   default = {
+    host        = null
+    path        = null
+    port        = null
+    protocol    = null
+    query       = null
     status_code = "HTTP_301"
   }
 }
