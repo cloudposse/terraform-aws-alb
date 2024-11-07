@@ -218,12 +218,12 @@ resource "aws_lb_listener" "https" {
     dynamic "redirect" {
       for_each = var.listener_https_redirect != null ? [var.listener_https_redirect] : []
       content {
-        host        = lookup(redirect.value, "host", null)
-        path        = lookup(redirect.value, "path", null)
-        port        = lookup(redirect.value, "port", null)
-        protocol    = lookup(redirect.value, "protocol", null)
-        query       = lookup(redirect.value, "query", null)
-        status_code = lookup(redirect.value, "status_code", "HTTP_301")
+        host        = redirect.value["host"]
+        path        = redirect.value["path"]
+        port        = redirect.value["port"]
+        protocol    = redirect.value["protocol"]
+        query       = redirect.value["query"]
+        status_code = redirect.value["status_code"]
       }
     }
   }

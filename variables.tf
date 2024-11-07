@@ -276,6 +276,7 @@ variable "listener_https_fixed_response" {
 
 variable "listener_https_redirect" {
   description = "Have the HTTPS listener return a redirect response for the default action."
+  # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener#status_code-2
   type = object({
     host        = optional(string)
     path        = optional(string)
@@ -284,7 +285,9 @@ variable "listener_https_redirect" {
     query       = optional(string)
     status_code = string
   })
-  default = null
+  default = {
+    status_code = "HTTP_301"
+  }
 }
 
 variable "lifecycle_configuration_rules" {
