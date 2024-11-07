@@ -40,8 +40,13 @@ variable "http_redirect" {
 
 variable "http_ingress_cidr_blocks" {
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = ["0.0.0.0/0", "::/0"]
   description = "List of CIDR blocks to allow in HTTP security group"
+
+  validation {
+    condition     = alltrue([for cidr in var.http_ingress_cidr_blocks : can(cidrhost(cidr, 0))])
+    error_message = "Each entry in http_ingress_cidr_blocks must be a valid CIDR block."
+  }
 }
 
 variable "http_ingress_prefix_list_ids" {
@@ -70,8 +75,13 @@ variable "https_enabled" {
 
 variable "https_ingress_cidr_blocks" {
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = ["0.0.0.0/0", "::/0"]
   description = "List of CIDR blocks to allow in HTTPS security group"
+
+  validation {
+    condition     = alltrue([for cidr in var.https_ingress_cidr_blocks : can(cidrhost(cidr, 0))])
+    error_message = "Each entry in https_ingress_cidr_blocks must be a valid CIDR block."
+  }
 }
 
 variable "https_ingress_prefix_list_ids" {
@@ -132,6 +142,11 @@ variable "ip_address_type" {
   type        = string
   default     = "ipv4"
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are `ipv4` and `dualstack`."
+
+  validation {
+    condition     = contains(["ipv4", "dualstack"], var.ip_address_type)
+    error_message = "ip_address_type must be either `ipv4` or `dualstack`."
+  }
 }
 
 variable "deletion_protection_enabled" {
