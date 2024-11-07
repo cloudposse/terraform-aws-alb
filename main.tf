@@ -203,7 +203,7 @@ resource "aws_lb_listener" "https" {
   tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = var.listener_https_fixed_response != null ? null : var.listener_https_redirect != null ? null : one(aws_lb_target_group.default[*].arn)
+    target_group_arn = var.listener_https_fixed_response != null || var.listener_https_redirect != null ? null : one(aws_lb_target_group.default[*].arn)
     type             = var.listener_https_fixed_response != null ? "fixed-response" : var.listener_https_redirect != null ? "redirect" : "forward"
 
     dynamic "fixed_response" {
