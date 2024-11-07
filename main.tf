@@ -203,8 +203,8 @@ resource "aws_lb_listener" "https" {
   tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = var.listener_https_fixed_response != null ? null : one(aws_lb_target_group.default[*].arn)
-    type             = var.listener_https_fixed_response != null ? "fixed-response" : "forward"
+    target_group_arn = var.listener_https_fixed_response != null ? null : var.listener_https_redirect != null ? null : one(aws_lb_target_group.default[*].arn)
+    type             = var.listener_https_fixed_response != null ? "fixed-response" : var.listener_https_redirect != null ? "redirect" : "forward"
 
     dynamic "fixed_response" {
       for_each = var.listener_https_fixed_response != null ? [var.listener_https_fixed_response] : []
@@ -212,6 +212,18 @@ resource "aws_lb_listener" "https" {
         content_type = fixed_response.value["content_type"]
         message_body = fixed_response.value["message_body"]
         status_code  = fixed_response.value["status_code"]
+      }
+    }
+
+    dynamic "redirect" {
+      for_each = var.listener_https_redirect != null ? [var.listener_https_redirect] : []
+      content {
+        host        = lookup(redirect.value, "host", null)
+        path        = lookup(redirect.value, "path", null)
+        port        = lookup(redirect.value, "port", null)
+        protocol    = lookup(redirect.value, "protocol", null)
+        query       = lookup(redirect.value, "query", null)
+        status_code = lookup(redirect.value, "status_code", "HTTP_301")
       }
     }
   }

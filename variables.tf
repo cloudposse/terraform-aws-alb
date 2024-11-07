@@ -274,6 +274,19 @@ variable "listener_https_fixed_response" {
   default = null
 }
 
+variable "listener_https_redirect" {
+  description = "Have the HTTPS listener return a redirect response for the default action."
+  type = object({
+    host        = optional(string)
+    path        = optional(string)
+    port        = optional(string)
+    protocol    = optional(string)
+    query       = optional(string)
+    status_code = optional(string)
+  })
+  default = null
+}
+
 variable "lifecycle_configuration_rules" {
   type = list(object({
     enabled = bool
