@@ -282,7 +282,7 @@ variable "listener_https_redirect" {
     port        = optional(string)
     protocol    = optional(string)
     query       = optional(string)
-    status_code = optional(string)
+    status_code = string
   })
   default = null
 }
