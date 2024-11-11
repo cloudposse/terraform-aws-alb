@@ -389,3 +389,9 @@ variable "xff_header_processing_mode" {
   default     = "append"
   description = "Determines how the load balancer modifies the X-Forwarded-For header in the HTTP request before sending the request to the target. The possible values are append, preserve, and remove. Only valid for Load Balancers of type application. The default is append"
 }
+
+variable "client_keep_alive" {
+  type        = number
+  default     = 3600
+  description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds."
+}
