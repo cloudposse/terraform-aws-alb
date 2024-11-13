@@ -1,3 +1,13 @@
+locals {
+  # cidrnetmask returns an error for IPv6 addresses
+  # cidrhost works with both IPv4 and IPv6, and returns an error if the argument is not a valid IPv4/IPv6 CIDR prefix
+  http_ingress_cidr_blocks_v4  = [for cidr in var.http_ingress_cidr_blocks : cidr if can(cidrnetmask(cidr))]
+  http_ingress_cidr_blocks_v6  = var.ip_address_type == "dualstack" ? [for cidr in var.http_ingress_cidr_blocks : cidr if !can(cidrnetmask(cidr)) && can(cidrhost(cidr, 0))] : []
+  https_ingress_cidr_blocks_v4 = [for cidr in var.https_ingress_cidr_blocks : cidr if can(cidrnetmask(cidr))]
+  https_ingress_cidr_blocks_v6 = var.ip_address_type == "dualstack" ? [for cidr in var.https_ingress_cidr_blocks : cidr if !can(cidrnetmask(cidr)) && can(cidrhost(cidr, 0))] : []
+}
+
+
 resource "aws_security_group" "default" {
   count       = module.this.enabled && var.security_group_enabled ? 1 : 0
   description = "Controls access to the ALB (HTTP/HTTPS)"
@@ -22,7 +32,8 @@ resource "aws_security_group_rule" "http_ingress" {
   from_port         = var.http_port
   to_port           = var.http_port
   protocol          = "tcp"
-  cidr_blocks       = var.http_ingress_cidr_blocks
+  cidr_blocks       = local.http_ingress_cidr_blocks_v4
+  ipv6_cidr_blocks  = local.http_ingress_cidr_blocks_v6
   prefix_list_ids   = var.http_ingress_prefix_list_ids
   security_group_id = one(aws_security_group.default[*].id)
 }
@@ -33,7 +44,8 @@ resource "aws_security_group_rule" "https_ingress" {
   from_port         = var.https_port
   to_port           = var.https_port
   protocol          = "tcp"
-  cidr_blocks       = var.https_ingress_cidr_blocks
+  cidr_blocks       = local.https_ingress_cidr_blocks_v4
+  ipv6_cidr_blocks  = local.https_ingress_cidr_blocks_v6
   prefix_list_ids   = var.https_ingress_prefix_list_ids
   security_group_id = one(aws_security_group.default[*].id)
 }
@@ -90,6 +102,7 @@ resource "aws_lb" "default" {
   drop_invalid_header_fields       = var.drop_invalid_header_fields
   preserve_host_header             = var.preserve_host_header
   xff_header_processing_mode       = var.xff_header_processing_mode
+  client_keep_alive                = var.client_keep_alive
 
   access_logs {
     bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
@@ -203,8 +216,8 @@ resource "aws_lb_listener" "https" {
   tags            = merge(module.this.tags, var.listener_additional_tags)
 
   default_action {
-    target_group_arn = var.listener_https_fixed_response != null ? null : one(aws_lb_target_group.default[*].arn)
-    type             = var.listener_https_fixed_response != null ? "fixed-response" : "forward"
+    target_group_arn = var.listener_https_fixed_response != null || var.listener_https_redirect != null ? null : one(aws_lb_target_group.default[*].arn)
+    type             = var.listener_https_fixed_response != null ? "fixed-response" : var.listener_https_redirect != null ? "redirect" : "forward"
 
     dynamic "fixed_response" {
       for_each = var.listener_https_fixed_response != null ? [var.listener_https_fixed_response] : []
@@ -212,6 +225,18 @@ resource "aws_lb_listener" "https" {
         content_type = fixed_response.value["content_type"]
         message_body = fixed_response.value["message_body"]
         status_code  = fixed_response.value["status_code"]
+      }
+    }
+
+    dynamic "redirect" {
+      for_each = var.listener_https_redirect != null ? [var.listener_https_redirect] : []
+      content {
+        host        = redirect.value["host"]
+        path        = redirect.value["path"]
+        port        = redirect.value["port"]
+        protocol    = redirect.value["protocol"]
+        query       = redirect.value["query"]
+        status_code = redirect.value["status_code"]
       }
     }
   }
