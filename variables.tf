@@ -366,6 +366,25 @@ variable "load_balancing_algorithm_type" {
   description = "Determines how the load balancer selects targets when routing requests. Only applicable for Application Load Balancer Target Groups"
 }
 
+variable "load_balancing_anomaly_mitigation" {
+  type        = string
+  default     = "off"
+  description = "Determines whether to enable target anomaly mitigation. Only supported by the weighted_random load balancing algorithm type. Valid values are 'on' or 'off'."
+
+  validation {
+    condition     = contains(["on", "off"], var.load_balancing_anomaly_mitigation)
+    error_message = "load_balancing_anomaly_mitigation must be either 'on' or 'off'"
+  }
+
+  # TODO: Uncomment improved validation block once Terraform version is upgraded to >= 1.9
+  # validation {
+  #   condition     = var.load_balancing_anomaly_mitigation == "off" || (
+  #     var.load_balancing_anomaly_mitigation == "on" && var.load_balancing_algorithm_type == "weighted_random"
+  #   )
+  #   error_message = "load_balancing_anomaly_mitigation can only be 'on' when load_balancing_algorithm_type is 'weighted_random'"
+  # }
+}
+
 variable "default_target_group_enabled" {
   type        = bool
   description = "Whether the default target group should be created or not."
