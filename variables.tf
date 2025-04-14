@@ -11,7 +11,7 @@ variable "subnet_ids" {
 variable "security_group_ids" {
   type        = list(string)
   default     = []
-  description = "A list of additional security group IDs to allow access to ALB"
+  description = "A list of additional security group IDs to attach to the ALB"
 }
 
 variable "internal" {
@@ -55,6 +55,12 @@ variable "http_ingress_prefix_list_ids" {
   description = "List of prefix list IDs for allowing access to HTTP ingress security group"
 }
 
+variable "http_ingress_security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "List of security group IDs to allow access to HTTP ingress security group"
+}
+
 variable "certificate_arn" {
   type        = string
   default     = ""
@@ -88,6 +94,12 @@ variable "https_ingress_prefix_list_ids" {
   type        = list(string)
   default     = []
   description = "List of prefix list IDs for allowing access to HTTPS ingress security group"
+}
+
+variable "https_ingress_security_group_ids" {
+  type        = list(string)
+  default     = []
+  description = "List of security group IDs to allow access to HTTPS ingress security group"
 }
 
 variable "https_ssl_policy" {

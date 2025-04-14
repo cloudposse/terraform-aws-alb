@@ -7,7 +7,6 @@ locals {
   https_ingress_cidr_blocks_v6 = var.ip_address_type == "dualstack" ? [for cidr in var.https_ingress_cidr_blocks : cidr if !can(cidrnetmask(cidr)) && can(cidrhost(cidr, 0))] : []
 }
 
-
 resource "aws_security_group" "default" {
   count       = module.this.enabled && var.security_group_enabled ? 1 : 0
   description = "Controls access to the ALB (HTTP/HTTPS)"
@@ -38,6 +37,16 @@ resource "aws_security_group_rule" "http_ingress" {
   security_group_id = one(aws_security_group.default[*].id)
 }
 
+resource "aws_security_group_rule" "http_ingress_from_security_groups" {
+  count                    = module.this.enabled && var.security_group_enabled && var.http_enabled ? length(var.http_ingress_security_group_ids) : 0
+  type                     = "ingress"
+  from_port                = var.http_port
+  to_port                  = var.http_port
+  protocol                 = "tcp"
+  source_security_group_id = var.http_ingress_security_group_ids[count.index]
+  security_group_id        = one(aws_security_group.default[*].id)
+}
+
 resource "aws_security_group_rule" "https_ingress" {
   count             = module.this.enabled && var.security_group_enabled && var.https_enabled ? 1 : 0
   type              = "ingress"
@@ -48,6 +57,16 @@ resource "aws_security_group_rule" "https_ingress" {
   ipv6_cidr_blocks  = local.https_ingress_cidr_blocks_v6
   prefix_list_ids   = var.https_ingress_prefix_list_ids
   security_group_id = one(aws_security_group.default[*].id)
+}
+
+resource "aws_security_group_rule" "https_ingress_from_security_groups" {
+  count                    = module.this.enabled && var.security_group_enabled && var.https_enabled ? length(var.https_ingress_security_group_ids) : 0
+  type                     = "ingress"
+  from_port                = var.https_port
+  to_port                  = var.https_port
+  protocol                 = "tcp"
+  source_security_group_id = var.https_ingress_security_group_ids[count.index]
+  security_group_id        = one(aws_security_group.default[*].id)
 }
 
 module "access_logs" {
