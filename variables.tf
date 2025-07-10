@@ -426,3 +426,9 @@ variable "client_keep_alive" {
   default     = 3600
   description = "Client keep alive value in seconds. The valid range is 60-604800 seconds. The default is 3600 seconds."
 }
+
+variable "reserved_capacity_units" {
+  type        = number
+  default     = null
+  description = "The number of capacity units reserved for the load balancer"
+}
