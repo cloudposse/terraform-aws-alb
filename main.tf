@@ -132,7 +132,7 @@ resource "aws_lb" "default" {
   dynamic "minimum_load_balancer_capacity" {
     for_each = var.reserved_capacity_units == null ? [] : [var.reserved_capacity_units]
     content {
-      capacity_units  = minimum_load_balancer_capacity.value
+      capacity_units = minimum_load_balancer_capacity.value
     }
   }
 }
