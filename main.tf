@@ -128,6 +128,13 @@ resource "aws_lb" "default" {
     prefix  = var.access_logs_prefix
     enabled = var.access_logs_enabled
   }
+
+  dynamic "minimum_load_balancer_capacity" {
+    for_each = var.reserved_capacity_units == null ? [] : [var.reserved_capacity_units]
+    content {
+      capacity_units = minimum_load_balancer_capacity.value
+    }
+  }
 }
 
 module "default_target_group_label" {
