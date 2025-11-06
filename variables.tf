@@ -432,3 +432,9 @@ variable "reserved_capacity_units" {
   default     = null
   description = "The number of capacity units reserved for the load balancer"
 }
+
+variable "enable_waf_fail_open" {
+  type        = bool
+  default     = false
+  description = "Enable forwarding requests to the targets when commmunication between the ALB and its WAF integration fails."
+}

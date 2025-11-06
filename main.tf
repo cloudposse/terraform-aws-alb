@@ -122,6 +122,7 @@ resource "aws_lb" "default" {
   preserve_host_header             = var.preserve_host_header
   xff_header_processing_mode       = var.xff_header_processing_mode
   client_keep_alive                = var.client_keep_alive
+  enable_waf_fail_open             = var.enable_waf_fail_open
 
   access_logs {
     bucket  = try(element(compact([var.access_logs_s3_bucket_id, module.access_logs.bucket_id]), 0), "")
