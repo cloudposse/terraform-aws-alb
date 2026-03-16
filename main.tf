@@ -119,6 +119,7 @@ resource "aws_lb" "default" {
   ip_address_type                  = var.ip_address_type
   enable_deletion_protection       = var.deletion_protection_enabled
   drop_invalid_header_fields       = var.drop_invalid_header_fields
+  desync_mitigation_mode           = var.desync_mitigation_mode
   preserve_host_header             = var.preserve_host_header
   xff_header_processing_mode       = var.xff_header_processing_mode
   client_keep_alive                = var.client_keep_alive
