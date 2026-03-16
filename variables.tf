@@ -185,6 +185,17 @@ variable "drop_invalid_header_fields" {
   description = "Indicates whether HTTP headers with header fields that are not valid are removed by the load balancer (true) or routed to targets (false)."
 }
 
+variable "desync_mitigation_mode" {
+  type        = string
+  default     = "defensive"
+  description = "How the load balancer handles requests that might pose a security risk to an application due to HTTP desync. Valid values are `monitor`, `defensive` (default), `strictest`."
+
+  validation {
+    condition     = contains(["monitor", "defensive", "strictest"], var.desync_mitigation_mode)
+    error_message = "Allowed values: `monitor`, `defensive`, or `strictest`."
+  }
+}
+
 variable "health_check_path" {
   type        = string
   default     = "/"
